@@ -27,14 +27,14 @@ class Line:
         self.__p1 = Point(x1, y1)
         self.__p2 = Point(x2, y2)
 
-    @staticmethod
-    def create_from_points(p1: Point, p2: Point) -> "Line":
+    @classmethod
+    def create_from_points(cls, p1: Point, p2: Point):
         """Parameters:
         p1 Point(int, int): X and Y-coordinate of point 1. 
         p2 Point(int, int): X and Y-coordinate of point 2. 
         """
 
-        return Line(p1.x, p1.y, p2.x, p2.y)
+        return cls(p1.x, p1.y, p2.x, p2.y)
 
     def get_point1(self) -> Point:
         return Point(self.__p1.x, self.__p1.y)

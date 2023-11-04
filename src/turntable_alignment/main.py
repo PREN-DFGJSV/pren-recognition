@@ -1,6 +1,9 @@
-import sys, os
-from TurntableQuadrant import TurntableQuadrant
+import os
+import sys
+
 import cv2
+
+from TurntableQuadrant import TurntableQuadrant
 
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]), "common"))
 

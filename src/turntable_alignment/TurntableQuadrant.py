@@ -1,10 +1,12 @@
-import sys, os
-from ColorPair import ColorPair
-from Video360 import Video360
-from Point import Point
-from Line import Line
+import os
+import sys
+
 import cv2
 import numpy as np
+
+from Line import Line
+from src.common.ColorPair import ColorPair
+from src.common.Video360 import Video360
 
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]), "common"))
 
