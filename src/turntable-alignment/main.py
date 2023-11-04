@@ -1,9 +1,9 @@
 import sys, os
+from TurntableQuadrant import TurntableQuadrant
+import cv2
+
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]), "common"))
 
-from TurntableQuadrant import TurntableQuadrant
-
-import cv2
 
 # TODO: Remove this temporary main
 turntable = TurntableQuadrant("res/XGGR_XXRX.mp4")

@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 class ColorPair:
     __lower: np.array
     __upper: np.array
@@ -18,10 +19,10 @@ class ColorPair:
         for color_pair in color_maps:
             mask += cv2.inRange(img, color_pair.lower, color_pair.upper)
         return mask
-    
+
     @staticmethod
     def create_white_pair() -> "ColorPair":
-        lower_white = np.array([0,0,168])
-        upper_white = np.array([172,111,255])
+        lower_white = np.array([0, 0, 168])
+        upper_white = np.array([172, 111, 255])
 
         return ColorPair(lower_white, upper_white)

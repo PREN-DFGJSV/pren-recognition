@@ -1,7 +1,7 @@
 import string
 from dataclasses import dataclass
 
-import EOrientierung
+from src.enums.EOrientierung import EOrientierung
 
 
 @dataclass

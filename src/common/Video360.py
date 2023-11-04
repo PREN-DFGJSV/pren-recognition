@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 class Video360:
     """A 360° video sequence taken from a 360° rotating camera or from a static camera capturing a turntable."""
 
