@@ -1,12 +1,6 @@
-# local dependencies
-import os
-import sys
-
 import numpy as np
 
-from Point import Point
-
-sys.path.append(os.path.join(os.path.dirname(sys.path[0]), "common"))
+from src.turntable_alignment.Point import Point
 
 
 class Line:

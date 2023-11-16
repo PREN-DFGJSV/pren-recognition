@@ -10,19 +10,28 @@ from src.communication.WebServer import WebServer
 from src.enums.EOrientierung import EOrientierung
 from src.model.CubePart import CubePart
 from src.model.ResultDto import ResultDto
+from src.turntable_alignment.TurntableQuadrant import TurntableQuadrant
 
-if __name__ == 'main':
+if __name__ == "__main__":
     print("Start Programm...")
 
+    # Bilder aus Video auslesen
+    turntable = TurntableQuadrant("res/XGGR_XXRX.mp4", rpm = 2)
+    frames = turntable.detect_aligned_frames()
+
+    for frame in frames:
+        cv2.imshow("Detected frame", frame.original_frame)
+        cv2.waitKey(0)
+
     # Bild 1 Farben auslesen
-    cr1 = ColorRecognizer(cv2.imread('../res/BGGR_RBRB/NORTH.png'))
+    cr1 = ColorRecognizer(cv2.imread("res/BGGR_RBRB/NORTH.png"))
     farbe1 = cr1.get_avg_color_from_area(MESSPUNKT_OBEN_LINKS)
     farbe2 = cr1.get_avg_color_from_area(MESSPUNKT_OBEN_RECHTS)
     farbe3 = cr1.get_avg_color_from_area(MESSPUNKT_UNTEN_LINKS)
     farbe4 = cr1.get_avg_color_from_area(MESSPUNKT_UNTEN_RECHTS)
 
     # Bild 2 Farben auslesen
-    cr2 = ColorRecognizer(cv2.imread('../res/BGGR_RBRB/SOUTH.png.png'))
+    cr2 = ColorRecognizer(cv2.imread("res/BGGR_RBRB/SOUTH.png.png"))
     farbe5 = cr2.get_avg_color_from_area(MESSPUNKT_OBEN_LINKS)
     farbe6 = cr2.get_avg_color_from_area(MESSPUNKT_OBEN_RECHTS)
     farbe7 = cr2.get_avg_color_from_area(MESSPUNKT_UNTEN_LINKS)

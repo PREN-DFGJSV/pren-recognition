@@ -1,14 +1,13 @@
-import os
-import sys
-
 import cv2
 import numpy as np
 
-from Line import Line
+from typing import List
+
+from src.enums.EOrientierung import EOrientierung
 from src.common.ColorPair import ColorPair
 from src.common.Video360 import Video360
-
-sys.path.append(os.path.join(os.path.dirname(sys.path[0]), "common"))
+from src.turntable_alignment.Line import Line
+from src.turntable_alignment.AlignedFrame import AlignedFrame
 
 
 # TODO: Add documentation for TurntableQuadrant
@@ -29,26 +28,44 @@ class TurntableQuadrant:
 
         self.__video360 = Video360(video_path, rpm)
 
-    def frame_when_aligned(self, start_deg=0, limit_rotation_deg=90):
+    # TODO: How no detection should be handled?
+    def detect_aligned_frames(self, start_angle: int = 0, max_angle_rotation: int = 95) -> List[AlignedFrame]:
 
-        angle = start_deg
+        detected_frames: List[AlignedFrame] = []
+
+        first_frame_found, first_frame_angle, first_frame = self.__retrieve_frame(start_angle, max_angle_rotation)
+
+        if first_frame_found:
+            detected_frames.append(first_frame)
+
+            next_frame_found, next_frame_angle, next_frame = self.__retrieve_frame(first_frame_angle + 175, 10)
+
+            if next_frame_found:
+                detected_frames.append(next_frame)
+
+        return detected_frames
+
+    def __retrieve_frame(self, start_angle: int, max_angle_rotation: int) -> (bool, float, AlignedFrame):
+
+        angle = start_angle
         quadrant_found = False
 
-        while not quadrant_found and angle < start_deg + limit_rotation_deg:
-            is_frame_aligned, frame = self.__retrieve_single_frame(angle)
+        while not quadrant_found and angle < start_angle + max_angle_rotation:
+            aligned_frame_found, aligned_frame = self.__is_frame_aligned(angle)
 
-            if is_frame_aligned:
-                print("Frame aligned at: ", angle, "° rotation")
-                cv2.imshow("Lines", frame)
-                return
+            if aligned_frame_found:
+                print(f"First aligned frame found at: {angle}° rotation!")
+                return True, angle, aligned_frame
 
+            # TODO: Optimize first frame detection, none static increment
             angle += 0.2
 
-        print("No frame found")
+        print("No frame found!")
+        return False, start_angle + max_angle_rotation, None
 
-    def __retrieve_single_frame(self, angle: float):
-
+    def __is_frame_aligned(self, angle: float) -> (bool, AlignedFrame):
         img_original = self.__video360.frame_at_angle(angle)
+        img_debug = img_original.copy()
         img_hsv = cv2.cvtColor(img_original, cv2.COLOR_BGR2HSV)
 
         mask_white = ColorPair.create_white_pair().get_mask(img_hsv)
@@ -61,8 +78,7 @@ class TurntableQuadrant:
         min_line_length = 100  # minimum number of pixels making up a line
         max_line_gap = 40  # maximum gap in pixels between connectable line segments
 
-        hough_lines = cv2.HoughLinesP(image_quadrant_edges, rho, theta, threshold, np.array([]), min_line_length,
-                                      max_line_gap)
+        hough_lines = cv2.HoughLinesP(image_quadrant_edges, rho, theta, threshold, np.array([]), min_line_length, max_line_gap)
 
         t_lines = []
 
@@ -84,18 +100,16 @@ class TurntableQuadrant:
                 vert_line = line
 
         if hor_line != 0 and vert_line != 0:
-            intersection = Line.calculate_line_intersection(hor_line, vert_line)
-            x, y = intersection.get_tuple()
+            intersection_point = Line.calculate_line_intersection(hor_line, vert_line)
+            x, y = intersection_point.get_tuple()
 
-            cv2.line(img_original, hor_line.get_point1_coordinates(), hor_line.get_point2_coordinates(), (255, 0, 0),
-                     10)
-            cv2.line(img_original, vert_line.get_point1_coordinates(), vert_line.get_point2_coordinates(), (255, 0, 0),
-                     10)
-            cv2.circle(img_original, (int(np.round(x)), int(np.round(y))), 4, (0, 255, 0), 5)
+            cv2.line(img_debug, hor_line.get_point1_coordinates(), hor_line.get_point2_coordinates(), (255, 0, 0), 10)
+            cv2.line(img_debug, vert_line.get_point1_coordinates(), vert_line.get_point2_coordinates(), (255, 0, 0), 10)
+            cv2.circle(img_debug, (int(np.round(x)), int(np.round(y))), 4, (0, 255, 0), 5)
 
-            return True, img_original
+            return True, AlignedFrame(img_original, img_debug, intersection_point, EOrientierung.NORD)
 
-        return False, 0
+        return False, None
 
     def mask_quadrants(self) -> None:
         img = self.__video360.frame_at_angle(0)
