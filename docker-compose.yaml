@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   app:
-    image: ghcr.io/PREN-DFGJSV/pren_recognition:latest # OR local -> build: .
+    image: ghcr.io/pren-dfgjsv/pren_recognition:latest # OR local -> build: .
     container_name: 'recognition-app'
     ports:
       - 8000:8000

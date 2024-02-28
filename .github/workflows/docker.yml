@@ -27,7 +27,7 @@ jobs:
     - name: Build and deploy
       uses: mr-smithers-excellent/docker-build-push@v6
       with:
-        image: pren-dfgjsv/pren_recognition
+        image: pren_recognition
         tags: latest
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
