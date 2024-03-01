@@ -10,6 +10,7 @@ from src.communication.WebServer import WebServer
 from src.enums.EOrientierung import EOrientierung
 from src.model.CubePart import CubePart
 from src.model.ResultDto import ResultDto
+from src.turntable_alignment.Line import Line
 from src.turntable_alignment.TurntableQuadrant import TurntableQuadrant
 
 if __name__ == "__main__":
@@ -20,7 +21,7 @@ if __name__ == "__main__":
     frames = turntable.detect_aligned_frames()
 
     for frame in frames:
-        cv2.imshow("Detected frame", frame.original_frame)
+        cv2.imshow("Detected frame", frame.debug_frame)
         cv2.waitKey(0)
 
     # Bild 1 Farben auslesen

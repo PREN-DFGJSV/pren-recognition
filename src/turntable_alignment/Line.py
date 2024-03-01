@@ -68,9 +68,25 @@ class Line:
         threshold = deviation_threshold_deg / 180 * np.pi
 
         return target_angle - threshold <= line_angle <= target_angle + threshold
+    
+    def deviation_from_horizontal_deg(self) -> float:
+        line_angle = self.get_angle()
+
+        dev_0 = abs(0 - line_angle / np.pi * 180) % 360
+        dev_180 = abs(180 - line_angle / np.pi * 180) % 360
+
+        return dev_0 if dev_0 < dev_180 else dev_180
+    
+    def deviation_from_vertical_deg(self) -> float:
+        line_angle = self.get_angle()
+
+        dev_90 = abs(90 - line_angle / np.pi * 180) % 360
+        dev_270 = abs(270 - line_angle / np.pi * 180) % 360
+
+        return dev_90 if dev_90 < dev_270 else dev_270
 
     @staticmethod
-    def calculate_angle(p1: Point, p2: Point, deviation_threshold_deg: float = 0) -> bool:
+    def calculate_angle(p1: Point, p2: Point) -> bool:
         dx = p2.x - p1.x
         dy = p2.y - p1.y
 

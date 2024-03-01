@@ -21,14 +21,15 @@
 
 ## Docker
 
-1. Beziehe das Docker Image von der GitHub Container registry:
-   ```sh
-   docker compose up
-   ```
-2. Erstelle einen Docker Container aus dem Image und führe diesen aus:
-   ```sh
-   docker compose down
-   ```
+Starte den Docker Container, welcher das Docker Image von der GitHub Container Registry bezieht:
+```sh
+docker compose up
+```
+
+Beende den Docker Container:
+```sh
+docker compose down
+```
 
 Aktualisierung erzwingen:
 ```sh
@@ -38,12 +39,17 @@ docker-compose up --force-recreate
 
 ## Setup
 
-Dependencies
+Run locally
+```sh
+python -m src.main
+```
+
+Save dependencies
 ```sh
 pip freeze > requirements.txt
 ```
 
-Build locally
+Build docker locally
 ```sh
 docker build . -t recognition:latest
 docker run -d recognition:latest
