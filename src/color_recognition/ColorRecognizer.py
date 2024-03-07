@@ -1,17 +1,21 @@
 import numpy as np
 
-from src.common.constants import SEITENLAENGE_MESSFLAECHE
+from src.common.ColorHelper import ColorHelper
+from src.common.constants import *
+from src.enums.EOrientierung import EOrientierung
+from src.model.CubePart import CubePart
 
 
 class ColorRecognizer:
-    def __init__(self, image: np.array):
+    def __init__(self, image: np.array, orientierung: EOrientierung):
         """
 
         :param image: Das Eingangsbild (OpenCV Bild).
         """
         self.image = image
+        self.orientierung = orientierung
 
-    def get_avg_color_from_area(self, area: tuple) -> tuple:
+    def __get_avg_color_from_area(self, area: tuple) -> tuple:
         """
         Berechnet die durchschnittliche Farbe in einem bestimmten Bereich eines OpenCV-Bildes.
 
@@ -27,3 +31,15 @@ class ColorRecognizer:
         avg_color = np.mean(bereich_bild, axis=(0, 1))
 
         return tuple(map(int, avg_color[::1]))
+
+    def get_cube_part(self) -> CubePart:
+        farbe1 = self.__get_avg_color_from_area(MESSPUNKT_OBEN_LINKS)
+        farbe2 = self.__get_avg_color_from_area(MESSPUNKT_OBEN_RECHTS)
+        farbe3 = self.__get_avg_color_from_area(MESSPUNKT_UNTEN_LINKS)
+        farbe4 = self.__get_avg_color_from_area(MESSPUNKT_UNTEN_RECHTS)
+
+        return CubePart(orientierung=self.orientierung,
+                        unten_links=ColorHelper.get_color(farbe1),
+                        unten_rechts=ColorHelper.get_color(farbe2),
+                        oben_links=ColorHelper.get_color(farbe3),
+                        oben_rechts=ColorHelper.get_color(farbe4))
