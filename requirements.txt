@@ -9,3 +9,4 @@ packaging==23.2
 pyproject_hooks==1.0.0
 requests==2.31.0
 urllib3==2.2.1
+flask==3.0.2

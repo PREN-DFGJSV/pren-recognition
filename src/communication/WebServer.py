@@ -1,15 +1,33 @@
-import string
+from flask import Flask
+from datetime import datetime
 
-import requests
+app = Flask(__name__)
 
-from src.model.BaseDto import BaseDto
+timer: datetime = None
 
 
-class WebServer:
-    def __init__(self, url: string):
-        # TODO: URL Validieren
-        self.url = url
+@app.route('/start')
+def start():
+    global timer
+    time = datetime.now()
+    return 'start'
 
-    def post_dto(self, dto: BaseDto) -> string:
-        result = requests.post(url=self.url, json=dto.to_json())
-        return result.status_code
+
+@app.route('/result/<int:result_id')
+def get_result(result_id):
+    return f'ID {result_id}'
+
+
+@app.route('/end')
+def end():
+    global timer
+    if timer is None:
+        return 'Error', 400
+    end_time = datetime.now()
+    duration = end_time - timer
+    timer_start = None  # Zurücksetzen der Startzeit für den nächsten Lauf
+    return 'end'
+
+
+def reset():
+    return 'reset'

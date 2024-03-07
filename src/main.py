@@ -6,11 +6,10 @@ from src.color_recognition.ColorRecognizer import ColorRecognizer
 from src.common.ColorHelper import ColorHelper
 from src.common.CubeHelper import CubeHelper
 from src.common.constants import *
-from src.communication.WebServer import WebServer
+from src.communication.HttpClient import HttpClient
 from src.enums.EOrientierung import EOrientierung
 from src.model.CubePart import CubePart
 from src.model.ResultDto import ResultDto
-from src.turntable_alignment.Line import Line
 from src.turntable_alignment.TurntableQuadrant import TurntableQuadrant
 
 if __name__ == "__main__":
@@ -54,7 +53,7 @@ if __name__ == "__main__":
     cube = CubeHelper.merge_cube_part_to_cube(part1, part2)
 
     # Übermitteln
-    server = WebServer("https://google.ch/test")
+    server = HttpClient("https://google.ch/test")
     result = server.post_dto(ResultDto.from_cube(datetime.now(), cube))
 
     print(f"Der Webserver lieferte den HTTP-Statuscode {result}")
