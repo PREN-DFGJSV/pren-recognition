@@ -33,28 +33,46 @@ class TurntableQuadrant:
 
         detected_frames: List[AlignedFrame] = []
 
-        first_frame = self.__retrieve_frame(start_angle, max_angle_rotation)
+        first_frame = self.detect_first_aligned_frame(start_angle, max_angle_rotation)
+        detected_frames.append(first_frame)
 
-        if first_frame is not None:
-            detected_frames.append(first_frame)
+        frame_angle_rotation_offsets = range(90, 270, 90)
 
-            next_frame = self.__retrieve_frame(first_frame.frame_angle + 175, 10)
+        for frame_angle_rotation_offset in frame_angle_rotation_offsets:
+            print(f"Searching next aligned frame at {frame_angle_rotation_offset}° offset!")
 
-            if next_frame is not None:
-                detected_frames.append(next_frame)
+            next_frame = self.detect_next_aligned_frame(first_frame, frame_angle_rotation_offset)
+            detected_frames.append(next_frame)
 
         return detected_frames
 
+    def detect_first_aligned_frame(self, start_angle: int = 0, max_angle_rotation: int = 95) -> List[AlignedFrame]:
+
+        return self.__retrieve_frame(start_angle, max_angle_rotation)
+    
+    def detect_next_aligned_frame(self, prev_aligned_frame: AlignedFrame, next_frame_rotation: int = 90) -> AlignedFrame:
+
+        angle_sector = 10
+        
+        if prev_aligned_frame is not None:
+
+            next_frame_angle_start = prev_aligned_frame.frame_angle + next_frame_rotation - angle_sector / 2
+            next_frame = self.__retrieve_frame(next_frame_angle_start, angle_sector)
+
+            return next_frame
+
+        return None
+
     def __retrieve_frame(self, start_angle: int, max_angle_rotation: int) -> AlignedFrame:
 
-        brute_step_increment_deg = 5
+        brute_step_increment_deg = 2
         fine_step_increment_deg = 0.1
 
         angle = start_angle
         quadrant_found = False
 
         while not quadrant_found and angle < start_angle + max_angle_rotation:
-            aligned_frame = self.__is_frame_aligned(angle, 5)
+            aligned_frame = self.__is_frame_aligned(angle, brute_step_increment_deg)
 
             if aligned_frame is not None:
                 print(f"Aligned frame roughly at {angle}°!")
@@ -70,9 +88,12 @@ class TurntableQuadrant:
 
                 if aligned_frames:
                     aligned_frames.sort(key=lambda x: x.vertical_line.deviation_from_vertical_deg(), reverse=True)
+                    aligned_frames.sort(key=lambda x: x.horizontal_line.deviation_from_horizontal_deg(), reverse=True)
                     print(f"Aligned frame exactly at {aligned_frames[0].frame_angle}°!")
+                    aligned_frames[0] = self.__set_orientation(aligned_frames[0])
                     return aligned_frames[0]
                 
+                aligned_frame = self.__set_orientation(aligned_frame)
                 return aligned_frame
 
             angle += brute_step_increment_deg
@@ -111,7 +132,7 @@ class TurntableQuadrant:
             cv2.line(debug_frame, vertical_line.get_point1_coordinates(), vertical_line.get_point2_coordinates(), (255, 0, 0), 10)
             cv2.circle(debug_frame, (int(np.round(x)), int(np.round(y))), 4, (0, 255, 0), 5)
 
-            return self.__get_aligned_frame(frame, debug_frame, angle, intersection_point, horizontal_line, vertical_line)
+            return AlignedFrame(frame, debug_frame, angle, intersection_point, EOrientierung.NORD, horizontal_line, vertical_line)
 
         return None
 
@@ -125,7 +146,7 @@ class TurntableQuadrant:
 
         rho = 1  # distance resolution in pixels of the Hough grid
         theta = np.pi / 180  # angular resolution in radians of the Hough grid
-        threshold = 50  # minimum number of votes (intersections in Hough grid cell)
+        threshold = 50  # minimum number of votes (intersections in Hough grid cell) // TODO: Parameterize -> common/constants
         min_line_length = 100  # minimum number of pixels making up a line
         max_line_gap = 40  # maximum gap in pixels between connectable line segments
 
@@ -134,14 +155,39 @@ class TurntableQuadrant:
             cv2.HoughLinesP(quadrant_edges, rho, theta, threshold, np.array([]), min_line_length, max_line_gap)
         )
     
-    def __get_aligned_frame(self, frame, debug_frame, angle, intersection_point, horizontal_line, vertical_line) -> AlignedFrame:
+    def __set_orientation(self, aligned_frame: AlignedFrame) -> AlignedFrame:
             
-            frame_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+            frame_hsv = cv2.cvtColor(aligned_frame.frame, cv2.COLOR_BGR2HSV)
             mask_white = ColorPair.create_white_pair().get_mask(frame_hsv)
             mask_white = cv2.GaussianBlur(mask_white, (1, 1), 0)
 
-            orientation = EOrientierung.NORD
+            hor = round(aligned_frame.center.x)
+            ver = round(aligned_frame.center.y)
             
-            # TODO: Implement orientation detection
+            east_top_left_section = mask_white[:ver, :hor]
+            north_top_right_section = mask_white[:ver, hor:]
+            south_bottom_left_section = mask_white[ver:, :hor]
+            west_bottom_right_section = mask_white[ver:, hor:]
 
-            return AlignedFrame(frame, debug_frame, angle, intersection_point, orientation, horizontal_line, vertical_line)
+            # total_white_px = np.sum(mask_white == 255) 
+            # total_black_px = np.sum(mask_white == 0) 
+
+            white_px = {
+                'east_top_left_section_white_px': np.sum(east_top_left_section == 255),
+                'north_top_right_section_white_px': np.sum(north_top_right_section == 255),
+                'south_bottom_left_section_white_px': np.sum(south_bottom_left_section == 255),
+                'west_bottom_right_section_white_px': np.sum(west_bottom_right_section == 255) 
+            }
+
+            orientation = EOrientierung.WEST
+
+            match max(white_px, key=white_px.get):
+                case 'east_top_left_section_white_px':
+                    orientation = EOrientierung.OST
+                case 'north_top_right_section_white_px':
+                    orientation = EOrientierung.NORD
+                case 'south_bottom_left_section_white_px':
+                    orientation = EOrientierung.SUED
+
+            aligned_frame.orientation = orientation
+            return aligned_frame
