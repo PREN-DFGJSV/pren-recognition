@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from src.turntable_alignment.Line import Line
+from src.model.Line import Line
 
 class TestLine(unittest.TestCase):
 

@@ -4,7 +4,7 @@ import numpy as np
 from typing import List
 from cv2.typing import MatLike
 
-from src.common.constants import LINE_MAX_GAP, LINE_MIN_PX_LENGTH, LINE_THRESHOLD
+from src.common.constants import LINE_MAX_GAP, LINE_MIN_PX_LENGTH, LINE_THRESHOLD, LOWER_WHITE, UPPER_WHITE
 from src.enums.EOrientierung import EOrientierung
 from src.common.ColorPair import ColorPair
 from src.common.Video360 import Video360
@@ -12,7 +12,6 @@ from src.model.Line import Line
 from src.model.AlignedFrame import AlignedFrame
 
 # TODO: Add documentation for TurntableQuadrant
-# TODO: Add functioanilty returning two frames with their orientation (N,E,S,W) and rotation center coordinates
 class TurntableQuadrant:
     """Rotating turntable as specified in PREN. 
     Sectioned into four quadrants of which one is white and three are black. The rotation center may be obstructed by a construction of cubes.
@@ -141,7 +140,7 @@ class TurntableQuadrant:
         frame = self.__video360.frame_at_angle(angle)
         frame_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-        mask_white = ColorPair.create_white_pair().get_mask(frame_hsv)
+        mask_white = ColorPair(LOWER_WHITE, UPPER_WHITE).get_mask(frame_hsv)
         mask_white = cv2.GaussianBlur(mask_white, (1, 1), 0)
         quadrant_edges = cv2.Canny(mask_white, 100, 200)
 
@@ -156,7 +155,7 @@ class TurntableQuadrant:
     def __set_orientation(self, aligned_frame: AlignedFrame) -> AlignedFrame:
             
             frame_hsv = cv2.cvtColor(aligned_frame.frame, cv2.COLOR_BGR2HSV)
-            mask_white = ColorPair.create_white_pair().get_mask(frame_hsv)
+            mask_white = ColorPair(LOWER_WHITE, UPPER_WHITE).get_mask(frame_hsv)
             mask_white = cv2.GaussianBlur(mask_white, (1, 1), 0)
 
             hor = round(aligned_frame.center.x)
