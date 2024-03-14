@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.turntable_alignment.Point import Point
+from src.model.Point import Point
 
 
 class Line:

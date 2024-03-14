@@ -23,3 +23,9 @@ UPPER_WHITE = np.array([255, 255, 255])
 
 LOWER_BLACK = np.array([0, 0, 0])
 UPPER_BLACK = np.array([180, 255, 40])
+
+
+# Ausrichtung Linienerkennung
+LINE_THRESHOLD = 50         # minimum number of votes (intersections in Hough grid cell)
+LINE_MIN_PX_LENGTH = 100    # minimum number of pixels making up a line
+LINE_MAX_GAP = 40           # maximum gap in pixels between connectable line segments

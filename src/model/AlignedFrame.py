@@ -3,8 +3,8 @@ from dataclasses import dataclass
 import numpy as np
 
 from src.enums.EOrientierung import EOrientierung
-from src.turntable_alignment.Line import Line
-from src.turntable_alignment.Point import Point
+from src.model.Line import Line
+from src.model.Point import Point
 
 @dataclass
 class AlignedFrame:
