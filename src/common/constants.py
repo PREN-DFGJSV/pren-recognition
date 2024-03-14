@@ -26,6 +26,15 @@ UPPER_BLACK = np.array([180, 255, 40])
 
 
 # Ausrichtung Linienerkennung
-LINE_THRESHOLD = 50         # minimum number of votes (intersections in Hough grid cell)
-LINE_MIN_PX_LENGTH = 100    # minimum number of pixels making up a line
-LINE_MAX_GAP = 40           # maximum gap in pixels between connectable line segments
+LINE_THRESHOLD = 50                     # minimum number of votes (intersections in Hough grid cell)
+LINE_MIN_PX_LENGTH = 100                # minimum number of pixels making up a line
+LINE_MAX_GAP = 40                       # maximum gap in pixels between connectable line segments
+
+
+# API & RTSP Konfiguration
+RTSP_IP = "147.88.48.131"
+RTSP_PATH = "/axis-media/media.amp"
+RTSP_URL = RTSP_IP + RTSP_PATH
+RTSP_USERNAME = "pren"
+RTSP_PASSWORD = "463997"
+RTSP_PROFILE = "pren_profile_small"     # "pren_profile_small" or "pren_profile_med"

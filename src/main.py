@@ -2,6 +2,7 @@ from datetime import datetime
 
 import cv2
 
+from src.common.VideoStream import VideoStream
 from src.color_recognition.ColorRecognizer import ColorRecognizer
 from src.common.CubeHelper import CubeHelper
 from src.communication.HttpClient import HttpClient
@@ -9,8 +10,12 @@ from src.enums.EOrientierung import EOrientierung
 from src.model.ResultDto import ResultDto
 from src.turntable_alignment.TurntableQuadrant import TurntableQuadrant
 
+# TODO: Add debug main with debug visualization & adjustment for parameters, cleanup main
 if __name__ == "__main__":
     print("Start Programm...")
+
+    # TODO: Remove temporary copied video stream
+    VideoStream.open_camera()
 
     # Bilder aus Video auslesen
     turntable = TurntableQuadrant("res/XGGR_XXRX.mp4", rpm=2)
