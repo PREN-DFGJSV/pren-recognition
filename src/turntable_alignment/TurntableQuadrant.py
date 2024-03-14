@@ -4,11 +4,12 @@ import numpy as np
 from typing import List
 from cv2.typing import MatLike
 
+from src.common.constants import LINE_MAX_GAP, LINE_MIN_PX_LENGTH, LINE_THRESHOLD
 from src.enums.EOrientierung import EOrientierung
 from src.common.ColorPair import ColorPair
 from src.common.Video360 import Video360
-from src.turntable_alignment.Line import Line
-from src.turntable_alignment.AlignedFrame import AlignedFrame
+from src.model.Line import Line
+from src.model.AlignedFrame import AlignedFrame
 
 # TODO: Add documentation for TurntableQuadrant
 # TODO: Add functioanilty returning two frames with their orientation (N,E,S,W) and rotation center coordinates
@@ -146,13 +147,10 @@ class TurntableQuadrant:
 
         rho = 1  # distance resolution in pixels of the Hough grid
         theta = np.pi / 180  # angular resolution in radians of the Hough grid
-        threshold = 50  # minimum number of votes (intersections in Hough grid cell) // TODO: Parameterize -> common/constants
-        min_line_length = 100  # minimum number of pixels making up a line
-        max_line_gap = 40  # maximum gap in pixels between connectable line segments
 
         return (
             frame, 
-            cv2.HoughLinesP(quadrant_edges, rho, theta, threshold, np.array([]), min_line_length, max_line_gap)
+            cv2.HoughLinesP(quadrant_edges, rho, theta, LINE_THRESHOLD, np.array([]), LINE_MIN_PX_LENGTH, LINE_MAX_GAP)
         )
     
     def __set_orientation(self, aligned_frame: AlignedFrame) -> AlignedFrame:
