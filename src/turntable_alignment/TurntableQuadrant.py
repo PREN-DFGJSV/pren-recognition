@@ -87,8 +87,7 @@ class TurntableQuadrant:
                     fine_angle += fine_step_increment_deg
 
                 if aligned_frames:
-                    aligned_frames.sort(key=lambda x: x.vertical_line.deviation_from_vertical_deg(), reverse=True)
-                    aligned_frames.sort(key=lambda x: x.horizontal_line.deviation_from_horizontal_deg(), reverse=True)
+                    aligned_frames.sort(key=lambda x: x.vertical_line.deviation_from_vertical_deg() + x.horizontal_line.deviation_from_horizontal_deg(), reverse=False)
                     print(f"Aligned frame exactly at {aligned_frames[0].frame_angle}°!")
                     aligned_frames[0] = self.__set_orientation(aligned_frames[0])
                     return aligned_frames[0]

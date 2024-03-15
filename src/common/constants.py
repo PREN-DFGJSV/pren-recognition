@@ -8,6 +8,11 @@ MESSPUNKT_UNTEN_RECHTS = (1000, 500)
 SEITENLAENGE_MESSFLAECHE = 30
 
 
+# Camera/Frame Region of Interest
+ROI_UPPER_LEFT = (100, 0)
+ROI_BOTTOM_RIGHT = (500, 300)
+
+
 # Farbbereiche
 LOWER_RED = np.array([0, 50, 50])
 UPPER_RED = np.array([10, 255, 255])
@@ -30,6 +35,11 @@ LINE_THRESHOLD = 50                     # minimum number of votes (intersections
 LINE_MIN_PX_LENGTH = 100                # minimum number of pixels making up a line
 LINE_MAX_GAP = 40                       # maximum gap in pixels between connectable line segments
 
+ANGLE_DEVIATION_THRESHOLD_DEG = 2       # How much the vertical or horizontal line is allowed to deviate. (±)
+DETECT_FRAMES_COUNT: int = 4            # Maximal count of aligned frames to be detected and returned.
+DETECT_FRAMES_STEP: int = 90
+MAX_ANGLE_ROTATION_FIRST_FRAME = 92
+TURNTABLE_RPM = 2                       # Turntable rotation speed given as rotations per minute. Specified in PREN is 2rpm (12°/s).
 
 # API & RTSP Konfiguration
 RTSP_IP = "147.88.48.131"

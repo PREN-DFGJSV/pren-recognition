@@ -8,23 +8,21 @@ from src.common.CubeHelper import CubeHelper
 from src.communication.HttpClient import HttpClient
 from src.enums.EOrientierung import EOrientierung
 from src.model.ResultDto import ResultDto
-from src.turntable_alignment.TurntableQuadrant import TurntableQuadrant
+from src.turntable_alignment.TurntableQuadrantStream import TurntableQuadrantStream
 
 # TODO: Add debug main with debug visualization & adjustment for parameters, cleanup main
 if __name__ == "__main__":
     print("Start Programm...")
 
-    # TODO: Remove temporary copied video stream
-    VideoStream.open_camera()
-
     # Bilder aus Video auslesen
-    turntable = TurntableQuadrant("res/XGGR_XXRX.mp4", rpm=2)
-    frames = turntable.detect_aligned_frames()
+    frames = TurntableQuadrantStream().detect_aligned_frames()
+
+    if len(frames) == 0:
+        print("No frames found!")
 
     for frame in frames:
         if frame is not None:
             cv2.imshow(f"Detected frame ({frame.orientation})", frame.debug_frame)
-            cv2.waitKey(0)
 
     # Bild 1 Farben auslesen
     cr_nord = ColorRecognizer(cv2.imread("res/BGGR_RBRB/NORTH.png"), EOrientierung.NORD)
