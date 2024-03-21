@@ -1,5 +1,8 @@
 """This file defines project-level constants."""
+import os
 import numpy as np
+
+SYS_PROD = True if os.getenv("PROD") == "true" else False
 
 MESSPUNKT_OBEN_LINKS = (890, 150)
 MESSPUNKT_OBEN_RECHTS = (1000, 150)
@@ -9,8 +12,8 @@ SEITENLAENGE_MESSFLAECHE = 30
 
 
 # Camera/Frame Region of Interest
-ROI_UPPER_LEFT = (100, 0)
-ROI_BOTTOM_RIGHT = (500, 300)
+ROI_UPPER_LEFT = (100, 50)
+ROI_BOTTOM_RIGHT = (510, 350)
 
 
 # Farbbereiche
@@ -42,7 +45,7 @@ MAX_ANGLE_ROTATION_FIRST_FRAME = 92
 TURNTABLE_RPM = 2                       # Turntable rotation speed given as rotations per minute. Specified in PREN is 2rpm (12°/s).
 
 # API & RTSP Konfiguration
-RTSP_IP = "147.88.48.131"
+RTSP_IP = "localhost:8000" if SYS_PROD else "147.88.48.131"
 RTSP_PATH = "/axis-media/media.amp"
 RTSP_URL = RTSP_IP + RTSP_PATH
 RTSP_USERNAME = "pren"

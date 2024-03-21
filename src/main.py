@@ -1,7 +1,8 @@
-from datetime import datetime
-
 import cv2
 
+from datetime import datetime
+
+from src.common.constants import *
 from src.common.VideoStream import VideoStream
 from src.color_recognition.ColorRecognizer import ColorRecognizer
 from src.common.CubeHelper import CubeHelper
@@ -12,17 +13,17 @@ from src.turntable_alignment.TurntableQuadrantStream import TurntableQuadrantStr
 
 # TODO: Add debug main with debug visualization & adjustment for parameters, cleanup main
 if __name__ == "__main__":
-    print("Start Programm...")
+    print(f"[{'PROD' if SYS_PROD else 'DEV'}] Start Programm...")
 
     # Bilder aus Video auslesen
     frames = TurntableQuadrantStream().detect_aligned_frames()
 
-    if len(frames) == 0:
+    if frames is None or len(frames) == 0:
         print("No frames found!")
-
-    for frame in frames:
-        if frame is not None:
-            cv2.imshow(f"Detected frame ({frame.orientation})", frame.debug_frame)
+    else:
+        for frame in frames:
+            if frame is not None:
+                cv2.imshow(f"Detected frame ({frame.orientation})", frame.debug_frame)
 
     # Bild 1 Farben auslesen
     cr_nord = ColorRecognizer(cv2.imread("res/BGGR_RBRB/NORTH.png"), EOrientierung.NORD)
