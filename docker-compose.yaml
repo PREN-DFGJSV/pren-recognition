@@ -3,11 +3,17 @@ services:
   app:
     build: . # image: ghcr.io/pren-dfgjsv/pren_recognition:latest # OR local -> build: .
     container_name: 'recognition-app'
-
-#     networks:
-#       mynetwork: {}
-
-# networks:
-#   mynetwork:
-#     external: true
-#     name: host
+    environment:
+      DEPLOY_ENV: prod
+    # network_mode: host
+    ports:
+      - 80:80
+      - 554:554
+      - 8554:8554
+      - 5003:5003
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
+    #   - "hslu:147.88.48.131"
+    # expose:
+    #   - 554
+    #   - 8554

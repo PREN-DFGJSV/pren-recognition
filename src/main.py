@@ -11,9 +11,11 @@ from src.enums.EOrientierung import EOrientierung
 from src.model.ResultDto import ResultDto
 from src.turntable_alignment.TurntableQuadrantStream import TurntableQuadrantStream
 
+
 # TODO: Add debug main with debug visualization & adjustment for parameters, cleanup main
 if __name__ == "__main__":
-    print(f"[{'PROD' if SYS_PROD else 'DEV'}] Start Programm...")
+
+    print(f"[{'PROD' if DEPLOY_ENV_PROD else 'DEV'}] Start Programm...")
 
     # Bilder aus Video auslesen
     frames = TurntableQuadrantStream().detect_aligned_frames()

@@ -2,8 +2,13 @@
 import os
 import numpy as np
 
-SYS_PROD = True if os.getenv("PROD") == "true" else False
 
+# Environment
+DEPLOY_ENV = os.getenv("DEPLOY_ENV")
+DEPLOY_ENV_PROD = True if DEPLOY_ENV == "prod" else False
+
+
+# Farberkennung
 MESSPUNKT_OBEN_LINKS = (890, 150)
 MESSPUNKT_OBEN_RECHTS = (1000, 150)
 MESSPUNKT_UNTEN_LINKS = (890, 500)
@@ -44,10 +49,19 @@ DETECT_FRAMES_STEP: int = 90
 MAX_ANGLE_ROTATION_FIRST_FRAME = 92
 TURNTABLE_RPM = 2                       # Turntable rotation speed given as rotations per minute. Specified in PREN is 2rpm (12°/s).
 
+
 # API & RTSP Konfiguration
-RTSP_IP = "localhost:8000" if SYS_PROD else "147.88.48.131"
+RTSP_IP = "147.88.48.131:554" if DEPLOY_ENV_PROD else "147.88.48.131:554"
 RTSP_PATH = "/axis-media/media.amp"
 RTSP_URL = RTSP_IP + RTSP_PATH
 RTSP_USERNAME = "pren"
 RTSP_PASSWORD = "463997"
 RTSP_PROFILE = "pren_profile_small"     # "pren_profile_small" or "pren_profile_med"
+
+
+# Ausrichtung Linienerkennung
+DEBUG_SHOW_LIVESTREAM = True
+DEBUG_SHOW_WHITE_MASK = False
+DEBUG_SHOW_CONTOUR = False
+DEBUG_SHOW_HOUGH_LINES = True
+DEBUG_SHOW_DETECTED_FRAME = True
