@@ -28,7 +28,8 @@ class TurntableQuadrantStream:
             "?streamprofile=" + RTSP_PROFILE)
          
         if cap is None or not cap.isOpened():
-            print("Video-Stream: Error accessing stream ", RTSP_IP)
+            print("Video-Stream: Error accessing stream", RTSP_IP)
+            cap.get
             return None
         
         fps = cap.get(cv2.CAP_PROP_FPS)
@@ -49,7 +50,7 @@ class TurntableQuadrantStream:
 
             debug_stream = frame.copy()
             cv2.rectangle(debug_stream, ROI_UPPER_LEFT, ROI_BOTTOM_RIGHT, (100, 50, 200), 5)
-            cv2.imshow("Video-Stream (close with 'q')", debug_stream)
+            cv2.imshow("[Live] Video-Stream (close with 'q')", debug_stream)
 
             roi = frame[ROI_UPPER_LEFT[1] : ROI_BOTTOM_RIGHT[1], ROI_UPPER_LEFT[0] : ROI_BOTTOM_RIGHT[0]]
 
@@ -60,14 +61,16 @@ class TurntableQuadrantStream:
                 if first_frame is not None:
                     first_frame.frame_angle = Video360.angle_from_frame_number(TURNTABLE_RPM, fps, current_frame_number)
                     detected_frames.append(first_frame)
-                    print(f"First frame found after {"{:.2f}".format(current_frame_number / fps)}s at {"{:.2f}".format(first_frame.frame_angle)}° with {first_frame.orientation}!")
-                    cv2.imshow(f"First frame ({"{:.2f}".format(current_frame_number / fps)}s - {"{:.2f}".format(first_frame.frame_angle)} deg - {first_frame.orientation})", first_frame.debug_frame)
+                    print(f"First frame found after {round(current_frame_number / fps, 2)}s at {round(first_frame.frame_angle, 2)}° with {first_frame.orientation}!")
+                    cv2.imshow(f"First frame ({round(current_frame_number / fps, 2)}s - {round(first_frame.frame_angle, 2)} deg - {first_frame.orientation})", first_frame.debug_frame)
 
             current_frame_number += 1
 
+            # Abort
             if cv2.waitKey(1) & 0xFF == ord("q"):
                 break
 
+            # TODO: Remove
             # Reset
             if cv2.waitKey(1) & 0xFF == ord("r"):
                 print("Reset")
@@ -76,8 +79,7 @@ class TurntableQuadrantStream:
 
         print(f"Table rotated maximum of {DETECT_FRAMES_COUNT * 90}°")
 
-        return detected_frames
-   
+        return detected_frames   
 
     def detect_aligned_frame(self, frame) -> AlignedFrame:
 
@@ -92,7 +94,12 @@ class TurntableQuadrantStream:
     def __is_frame_aligned(self, frame) -> AlignedFrame:
 
         frame, raw_lines = self.__detect_edge_lines_of_frame(frame)
+
+        detected_lines_frame = frame.copy()
         debug_frame = frame.copy()
+
+        if raw_lines is None:
+            raw_lines = []
 
         lines = []
 
@@ -101,6 +108,10 @@ class TurntableQuadrantStream:
                 lines.append(Line(x1, y1, x2, y2))
                 color = np.random.randint(0, 255, size=(3,))
                 color = (int(color[0]), int(color[1]), int(color[2]))
+                cv2.line(detected_lines_frame, (x1, y1), (x2, y2), color, 2)
+
+        if not DEPLOY_ENV_PROD and DEBUG_SHOW_HOUGH_LINES:
+            cv2.imshow("[Live] Hough Lines", detected_lines_frame)
 
         lines.sort(key=lambda x: x.get_length(), reverse=True)
         horizontal_line = None
@@ -136,9 +147,16 @@ class TurntableQuadrantStream:
         rho = 1  # distance resolution in pixels of the Hough grid
         theta = np.pi / 180  # angular resolution in radians of the Hough grid
 
+        if not DEPLOY_ENV_PROD and DEBUG_SHOW_WHITE_MASK:
+            cv2.imshow("[Live] White mask", mask_white)
+        if not DEPLOY_ENV_PROD and DEBUG_SHOW_CONTOUR:
+            cv2.imshow("[Live] Contours", quadrant_edges)
+        
+        lines = cv2.HoughLinesP(quadrant_edges, rho, theta, LINE_THRESHOLD, np.array([]), LINE_MIN_PX_LENGTH, LINE_MAX_GAP)
+
         return (
             frame, 
-            cv2.HoughLinesP(quadrant_edges, rho, theta, LINE_THRESHOLD, np.array([]), LINE_MIN_PX_LENGTH, LINE_MAX_GAP)
+            lines
         )
     
     def __set_orientation(self, aligned_frame: AlignedFrame) -> AlignedFrame:

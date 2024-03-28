@@ -34,7 +34,7 @@ docker compose down
 Aktualisierung erzwingen:
 ```sh
 docker-compose pull
-docker-compose up --force-recreate
+docker-compose up --force-recreate --build --no-deps
 ```
 
 ## Setup
