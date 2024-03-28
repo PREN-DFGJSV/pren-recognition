@@ -2,7 +2,6 @@
 import os
 import numpy as np
 
-
 # Environment
 DEPLOY_ENV = os.getenv("DEPLOY_ENV")
 DEPLOY_ENV_PROD = True if DEPLOY_ENV == "prod" else False

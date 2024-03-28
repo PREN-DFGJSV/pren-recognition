@@ -1,7 +1,7 @@
 import numpy as np
+import src.config as config
 
 from src.common.ColorHelper import ColorHelper
-from src.common.constants import *
 from src.enums.EOrientierung import EOrientierung
 from src.model.CubePart import CubePart
 
@@ -24,8 +24,8 @@ class ColorRecognizer:
         """
         # Extrahiere den Bereich aus dem Bild
         x_start, y_start = area
-        bereich_bild = self.image[y_start:(y_start + SEITENLAENGE_MESSFLAECHE),
-                       x_start:(x_start + SEITENLAENGE_MESSFLAECHE)]
+        bereich_bild = self.image[y_start:(y_start + config.SEITENLAENGE_MESSFLAECHE),
+                       x_start:(x_start + config.SEITENLAENGE_MESSFLAECHE)]
 
         # Berechne die durchschnittliche Farbe im Ausschnitt
         avg_color = np.mean(bereich_bild, axis=(0, 1))
@@ -33,10 +33,10 @@ class ColorRecognizer:
         return tuple(map(int, avg_color[::1]))
 
     def get_cube_part(self) -> CubePart:
-        farbe1 = self.__get_avg_color_from_area(MESSPUNKT_OBEN_LINKS)
-        farbe2 = self.__get_avg_color_from_area(MESSPUNKT_OBEN_RECHTS)
-        farbe3 = self.__get_avg_color_from_area(MESSPUNKT_UNTEN_LINKS)
-        farbe4 = self.__get_avg_color_from_area(MESSPUNKT_UNTEN_RECHTS)
+        farbe1 = self.__get_avg_color_from_area(config.MESSPUNKT_OBEN_LINKS)
+        farbe2 = self.__get_avg_color_from_area(config.MESSPUNKT_OBEN_RECHTS)
+        farbe3 = self.__get_avg_color_from_area(config.MESSPUNKT_UNTEN_LINKS)
+        farbe4 = self.__get_avg_color_from_area(config.MESSPUNKT_UNTEN_RECHTS)
 
         return CubePart(orientierung=self.orientierung,
                         unten_links=ColorHelper.get_color(farbe1),

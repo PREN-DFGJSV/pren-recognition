@@ -4,8 +4,10 @@ import numpy as np
 from typing import List
 from cv2.typing import MatLike
 
+from src.common.dialog import showConfigDialog
+import src.config as config
+
 from src.common.Video360 import Video360
-from src.common.constants import *
 from src.enums.EOrientierung import EOrientierung
 from src.common.ColorPair import ColorPair
 from src.model.Line import Line
@@ -23,19 +25,19 @@ class TurntableQuadrantStream:
 
         cap = cv2.VideoCapture(
             "rtsp://" +
-            RTSP_USERNAME + ":" + RTSP_PASSWORD +
-            "@" + RTSP_URL +
-            "?streamprofile=" + RTSP_PROFILE)
+            config.RTSP_USERNAME + ":" + config.RTSP_PASSWORD +
+            "@" + config.RTSP_URL +
+            "?streamprofile=" + config.RTSP_PROFILE)
          
         if cap is None or not cap.isOpened():
-            print("Video-Stream: Error accessing stream", RTSP_IP)
+            print("Video-Stream: Error accessing stream", config.RTSP_IP)
             cap.get
             return None
         
         fps = cap.get(cv2.CAP_PROP_FPS)
         current_frame_number = 0
-        max_first_frame_number = Video360.frame_number_from_angle(TURNTABLE_RPM, fps, MAX_ANGLE_ROTATION_FIRST_FRAME)
-        max_total_frame_number = Video360.frame_number_from_angle(TURNTABLE_RPM, fps, DETECT_FRAMES_COUNT * 90)
+        max_first_frame_number = Video360.frame_number_from_angle(config.TURNTABLE_RPM, fps, config.MAX_ANGLE_ROTATION_FIRST_FRAME)
+        max_total_frame_number = Video360.frame_number_from_angle(config.TURNTABLE_RPM, fps, config.DETECT_FRAMES_COUNT * 90)
 
         print("Video-Stream: Analyzing stream with", fps, "fps")
 
@@ -48,18 +50,20 @@ class TurntableQuadrantStream:
                 print("Video-Stream: Error reading next frame")
                 break
 
+            showConfigDialog()
+
             debug_stream = frame.copy()
-            cv2.rectangle(debug_stream, ROI_UPPER_LEFT, ROI_BOTTOM_RIGHT, (100, 50, 200), 5)
+            cv2.rectangle(debug_stream, config.ROI_UPPER_LEFT, config.ROI_BOTTOM_RIGHT, (100, 50, 200), 5)
             cv2.imshow("[Live] Video-Stream (close with 'q')", debug_stream)
 
-            roi = frame[ROI_UPPER_LEFT[1] : ROI_BOTTOM_RIGHT[1], ROI_UPPER_LEFT[0] : ROI_BOTTOM_RIGHT[0]]
+            roi = frame[config.ROI_UPPER_LEFT[1] : config.ROI_BOTTOM_RIGHT[1], config.ROI_UPPER_LEFT[0] : config.ROI_BOTTOM_RIGHT[0]]
 
             if first_frame is None:
 
                 first_frame = self.detect_aligned_frame(roi)
 
                 if first_frame is not None:
-                    first_frame.frame_angle = Video360.angle_from_frame_number(TURNTABLE_RPM, fps, current_frame_number)
+                    first_frame.frame_angle = Video360.angle_from_frame_number(config.TURNTABLE_RPM, fps, current_frame_number)
                     detected_frames.append(first_frame)
                     print(f"First frame found after {round(current_frame_number / fps, 2)}s at {round(first_frame.frame_angle, 2)}° with {first_frame.orientation}!")
                     cv2.imshow(f"First frame ({round(current_frame_number / fps, 2)}s - {round(first_frame.frame_angle, 2)} deg - {first_frame.orientation})", first_frame.debug_frame)
@@ -77,7 +81,7 @@ class TurntableQuadrantStream:
                 first_frame = None
                 current_frame_number = 0
 
-        print(f"Table rotated maximum of {DETECT_FRAMES_COUNT * 90}°")
+        print(f"Table rotated maximum of {config.DETECT_FRAMES_COUNT * 90}°")
 
         return detected_frames   
 
@@ -110,7 +114,7 @@ class TurntableQuadrantStream:
                 color = (int(color[0]), int(color[1]), int(color[2]))
                 cv2.line(detected_lines_frame, (x1, y1), (x2, y2), color, 2)
 
-        if not DEPLOY_ENV_PROD and DEBUG_SHOW_HOUGH_LINES:
+        if not config.DEPLOY_ENV_PROD and config.DEBUG_SHOW_HOUGH_LINES:
             cv2.imshow("[Live] Hough Lines", detected_lines_frame)
 
         lines.sort(key=lambda x: x.get_length(), reverse=True)
@@ -118,9 +122,9 @@ class TurntableQuadrantStream:
         vertical_line = None
 
         for line in lines:
-            if horizontal_line is None and (line.is_at_angle(0, ANGLE_DEVIATION_THRESHOLD_DEG) or line.is_at_angle(180, ANGLE_DEVIATION_THRESHOLD_DEG)):
+            if horizontal_line is None and (line.is_at_angle(0, config.ANGLE_DEVIATION_THRESHOLD_DEG) or line.is_at_angle(180, config.ANGLE_DEVIATION_THRESHOLD_DEG)):
                 horizontal_line = line
-            elif vertical_line is None and (line.is_at_angle(90, ANGLE_DEVIATION_THRESHOLD_DEG) or line.is_at_angle(270, ANGLE_DEVIATION_THRESHOLD_DEG)):
+            elif vertical_line is None and (line.is_at_angle(90, config.ANGLE_DEVIATION_THRESHOLD_DEG) or line.is_at_angle(270, config.ANGLE_DEVIATION_THRESHOLD_DEG)):
                 vertical_line = line
 
         if horizontal_line is not None and vertical_line is not None:
@@ -139,7 +143,7 @@ class TurntableQuadrantStream:
 
         frame_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-        mask_white = ColorPair(LOWER_WHITE, UPPER_WHITE).get_mask(frame_hsv)
+        mask_white = ColorPair(config.LOWER_WHITE, config.UPPER_WHITE).get_mask(frame_hsv)
         mask_white = cv2.GaussianBlur(mask_white, (1, 1), 0)
 
         quadrant_edges = cv2.Canny(mask_white, 100, 200)
@@ -147,12 +151,12 @@ class TurntableQuadrantStream:
         rho = 1  # distance resolution in pixels of the Hough grid
         theta = np.pi / 180  # angular resolution in radians of the Hough grid
 
-        if not DEPLOY_ENV_PROD and DEBUG_SHOW_WHITE_MASK:
+        if not config.DEPLOY_ENV_PROD and config.DEBUG_SHOW_WHITE_MASK:
             cv2.imshow("[Live] White mask", mask_white)
-        if not DEPLOY_ENV_PROD and DEBUG_SHOW_CONTOUR:
+        if not config.DEPLOY_ENV_PROD and config.DEBUG_SHOW_CONTOUR:
             cv2.imshow("[Live] Contours", quadrant_edges)
         
-        lines = cv2.HoughLinesP(quadrant_edges, rho, theta, LINE_THRESHOLD, np.array([]), LINE_MIN_PX_LENGTH, LINE_MAX_GAP)
+        lines = cv2.HoughLinesP(quadrant_edges, rho, theta, config.LINE_THRESHOLD, np.array([]), config.LINE_MIN_PX_LENGTH, config.LINE_MAX_GAP)
 
         return (
             frame, 
@@ -162,7 +166,7 @@ class TurntableQuadrantStream:
     def __set_orientation(self, aligned_frame: AlignedFrame) -> AlignedFrame:
             
             frame_hsv = cv2.cvtColor(aligned_frame.frame, cv2.COLOR_BGR2HSV)
-            mask_white = ColorPair(LOWER_WHITE, UPPER_WHITE).get_mask(frame_hsv)
+            mask_white = ColorPair(config.LOWER_WHITE, config.UPPER_WHITE).get_mask(frame_hsv)
             mask_white = cv2.GaussianBlur(mask_white, (1, 1), 0)
 
             hor = round(aligned_frame.center.x)

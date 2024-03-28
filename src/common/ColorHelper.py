@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.common.constants import *
+import src.config as config
 from src.enums.EColor import EColor
 
 
@@ -11,15 +11,15 @@ class ColorHelper:
 
     @staticmethod
     def get_color(hsv_value) -> EColor:
-        if ColorHelper.__is_within_range(hsv_value, LOWER_RED, UPPER_RED):
+        if ColorHelper.__is_within_range(hsv_value, config.LOWER_RED, config.UPPER_RED):
             return EColor.RED
-        elif ColorHelper.__is_within_range(hsv_value, LOWER_YELLOW, UPPER_YELLOW):
+        elif ColorHelper.__is_within_range(hsv_value, config.LOWER_YELLOW, config.UPPER_YELLOW):
             return EColor.YELLOW
-        elif ColorHelper.__is_within_range(hsv_value, LOWER_BLUE, UPPER_BLUE):
+        elif ColorHelper.__is_within_range(hsv_value, config.LOWER_BLUE, config.UPPER_BLUE):
             return EColor.BLUE
-        elif ColorHelper.__is_within_range(hsv_value, LOWER_WHITE, UPPER_WHITE):
+        elif ColorHelper.__is_within_range(hsv_value, config.LOWER_WHITE, config.UPPER_WHITE):
             return EColor.WHITE
-        elif ColorHelper.__is_within_range(hsv_value, LOWER_BLACK, UPPER_BLACK):
+        elif ColorHelper.__is_within_range(hsv_value, config.LOWER_BLACK, config.UPPER_BLACK):
             return EColor.BLACK
         else:
             return EColor.UNDEFINED

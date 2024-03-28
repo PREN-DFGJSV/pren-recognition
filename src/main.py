@@ -1,8 +1,8 @@
 import cv2
+import src.config as config
 
 from datetime import datetime
 
-from src.common.constants import *
 from src.common.VideoStream import VideoStream
 from src.color_recognition.ColorRecognizer import ColorRecognizer
 from src.common.CubeHelper import CubeHelper
@@ -15,7 +15,7 @@ from src.turntable_alignment.TurntableQuadrantStream import TurntableQuadrantStr
 # TODO: Add debug main with debug visualization & adjustment for parameters, cleanup main
 if __name__ == "__main__":
 
-    print(f"[{'PROD' if DEPLOY_ENV_PROD else 'DEV'}] Start Programm...")
+    print(f"[{'PROD' if config.DEPLOY_ENV_PROD else 'DEV'}] Start Programm...")
 
     # Bilder aus Video auslesen
     frames = TurntableQuadrantStream().detect_aligned_frames()

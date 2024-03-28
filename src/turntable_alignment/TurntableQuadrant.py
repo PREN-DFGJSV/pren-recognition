@@ -4,7 +4,7 @@ import numpy as np
 from typing import List
 from cv2.typing import MatLike
 
-from src.common.constants import *
+from config import *
 from src.enums.EOrientierung import EOrientierung
 from src.common.ColorPair import ColorPair
 from src.common.Video360 import Video360
