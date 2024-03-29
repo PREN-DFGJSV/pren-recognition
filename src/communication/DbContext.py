@@ -9,6 +9,9 @@ class SQLiteDB:
         self.cursor = self.connection.cursor()
         self.create_schema()
 
+    def get_cursor(self):
+        return self.cursor
+
     def select(self, query: string, params=()):
         """
             Führt einen SELECT-Befehl aus und gibt das Ergebnis zurück.
@@ -16,6 +19,36 @@ class SQLiteDB:
         """
         self.cursor.execute(query, params)
         return self.cursor.fetchall()
+
+    def get_recognition_by_id(self, record_id: int) -> dict:
+        """
+        Gibt einen Datensatz anhand der ID von der Recognition Tabelle zurück.
+        Die Rückgabe ist ein Dictionary mit dem Spaltennamen als Key und dem Wert als Value.
+
+        :param record_id: Die ID des Datensatzes, der abgerufen werden soll.
+        :return: Ein Dictionary mit den Spaltennamen als Schlüsseln und den entsprechenden Werten oder None, falls kein Datensatz gefunden wurde.
+        """
+        query = "SELECT * FROM Recognition WHERE id = ?"
+        self.cursor.execute(query, (record_id,))
+        result = self.cursor.fetchone()
+
+        if result:
+            columns = [description[0] for description in self.cursor.description]
+            return dict(zip(columns, result))
+        else:
+            return None
+
+    def recognition_exists(self, record_id: int) -> bool:
+        """
+        Überprüft, ob ein Eintrag mit der angegebenen ID in der Recognition Tabelle existiert.
+
+        :param record_id: Die ID des Datensatzes, der überprüft werden soll.
+        :return: True, wenn der Eintrag existiert, sonst False.
+        """
+        query = "SELECT EXISTS(SELECT 1 FROM Recognition WHERE id = ?)"
+        self.cursor.execute(query, (record_id,))
+        result = self.cursor.fetchone()
+        return result[0] == 1
 
     def insert(self, table: string, data):
         """
@@ -44,14 +77,14 @@ class SQLiteDB:
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS Recognition (
                 id INTEGER PRIMARY KEY,
-                pos1 TEXT NOT NULL,
-                pos2 TEXT NOT NULL,
-                pos3 TEXT NOT NULL,
-                pos4 TEXT NOT NULL,
-                pos5 TEXT NOT NULL,
-                pos6 TEXT NOT NULL,
-                pos7 TEXT NOT NULL,
-                pos8 TEXT NOT NULL,
+                pos1 INTEGER NULL,
+                pos2 INTEGER NULL,
+                pos3 INTEGER NULL,
+                pos4 INTEGER NULL,
+                pos5 INTEGER NULL,
+                pos6 INTEGER NULL,
+                pos7 INTEGER NULL,
+                pos8 INTEGER NULL
             )
         ''')
         self.connection.commit()
