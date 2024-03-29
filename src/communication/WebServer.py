@@ -7,7 +7,6 @@ from src.model.BuildInstructionDto import BuildInstructionDto
 app = Flask(__name__)
 
 timer: datetime = None
-db = DbContext.SQLiteDB("results.db")
 
 
 @app.route('/result/<int:result_id>')
@@ -26,6 +25,8 @@ def get_result(result_id):
     # Füge die JSON-Strings zu einem Gesamt-JSON-Array zusammen
     json_array_string = '[' + ', '.join(json_strings) + ']'
 
+    db.close()
+
     # Setze den Content-Type der Antwort auf 'application/json'
     return Response(json_array_string, mimetype='application/json')
 
@@ -38,7 +39,7 @@ def end():
     end_time = datetime.now()
     duration = end_time - timer
     timer = None  # Zurücksetzen der Startzeit für den nächsten Lauf
-    return duration
+    return str(duration)
 
 
 @app.route('/test')
@@ -59,12 +60,20 @@ def test():
     return Response(json_array_string, mimetype='application/json')
 
 
+@app.route('/reset')
 def reset():
-    return 'reset'
+    db = DbContext.SQLiteDB("results.db")
+    db.reset_table()
+    db.close()
+
+    global timer
+    timer = None
+
+    return 'Done', 200
 
 
-def get_buildinstructions_from_db(element_id: int, db: DbContext.SQLiteDB) -> list:
-    current_result = db.get_recognition_by_id(element_id)
+def get_buildinstructions_from_db(element_id: int, db_context: DbContext.SQLiteDB) -> list:
+    current_result = db_context.get_recognition_by_id(element_id)
     instructions = []
 
     # Überprüfen, ob alle Positionsspalten nicht NULL sind
@@ -80,7 +89,7 @@ def get_buildinstructions_from_db(element_id: int, db: DbContext.SQLiteDB) -> li
                 instructions.append(BuildInstructionDto(position, int(color), all_positions_filled))
         return instructions
 
-    previous_result = db.get_recognition_by_id(element_id - 1)
+    previous_result = db_context.get_recognition_by_id(element_id - 1)
 
     # Nur durchführen, wenn sowohl das aktuelle als auch das vorherige Ergebnis existieren
     if current_result and previous_result:
@@ -94,7 +103,6 @@ def get_buildinstructions_from_db(element_id: int, db: DbContext.SQLiteDB) -> li
                 instructions.append(BuildInstructionDto(position, int(current_color), all_positions_filled))
 
     return instructions
-
 
 
 if __name__ == '__main__':

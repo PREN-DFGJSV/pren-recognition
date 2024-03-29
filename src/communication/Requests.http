@@ -11,3 +11,14 @@ http://192.168.138.156:5000/test
 
 GET http://localhost:5000/result/1
 Accept: application/json
+
+#########
+
+GET http://localhost:5000/result/2
+Accept: application/json
+
+
+##########
+
+GET http://localhost:5000/duration
+Accept: application/json

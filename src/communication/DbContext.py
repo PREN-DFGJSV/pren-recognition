@@ -62,12 +62,12 @@ class SQLiteDB:
         self.cursor.execute(query, tuple(data.values()))
         self.connection.commit()
 
-    def reset_table(self, table: string):
+    def reset_table(self):
         """
-            Löscht alle Einträge in einer spezifischen Tabelle.
-            db.reset_table('meine_tabelle')
+            Löscht alle Einträge aus der Recognition Tabelle.
+            db.reset_table()
         """
-        self.cursor.execute(f'DELETE FROM {table}')
+        self.cursor.execute(f'DELETE FROM Recognition')
         self.connection.commit()
 
     def create_schema(self):
