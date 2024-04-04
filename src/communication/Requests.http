@@ -9,12 +9,12 @@ http://192.168.138.156:5000/test
 
 #########
 
-GET http://localhost:5000/result/1
+GET http://localhost:5000/1/result
 Accept: application/json
 
 #########
 
-GET http://localhost:5000/result/2
+GET http://localhost:5000/2/result
 Accept: application/json
 
 

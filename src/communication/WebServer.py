@@ -9,7 +9,7 @@ app = Flask(__name__)
 timer: datetime = None
 
 
-@app.route('/result/<int:result_id>')
+@app.route('/<int:result_id>/result')
 def get_result(result_id):
     global timer
     db = DbContext.SQLiteDB("results.db")
