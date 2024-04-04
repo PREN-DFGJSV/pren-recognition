@@ -1,7 +1,8 @@
 import tkinter as tk
 import src.config as config
 
-root = tk.Tk()
+if (not config.DEPLOY_ENV_PROD):
+    root = tk.Tk()
 
 def __apply():
     config.ROI_UPPER_LEFT = (int(ROI_UPPER_LEFT_x_entry.get()), int(ROI_UPPER_LEFT_y_entry.get()))

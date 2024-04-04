@@ -9,6 +9,8 @@ COPY requirements.txt requirements.txt
 COPY src/ src/
 COPY res/ res/
 
-RUN pip install -r requirements.txt --break-system-packages
+RUN apt-get update && apt-get install -y sudo
+RUN sudo apt-get install python3-tk -y
+RUN sudo pip install -r requirements.txt --break-system-packages
 
 CMD python3 -m src.main

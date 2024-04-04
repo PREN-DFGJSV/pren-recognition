@@ -50,7 +50,8 @@ class TurntableQuadrantStream:
                 print("Video-Stream: Error reading next frame")
                 break
 
-            showConfigDialog()
+            if (not config.DEPLOY_ENV_PROD):
+                showConfigDialog()
 
             debug_stream = frame.copy()
             cv2.rectangle(debug_stream, config.ROI_UPPER_LEFT, config.ROI_BOTTOM_RIGHT, (100, 50, 200), 5)
