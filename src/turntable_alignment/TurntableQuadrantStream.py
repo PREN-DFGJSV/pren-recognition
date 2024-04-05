@@ -38,14 +38,16 @@ class TurntableQuadrantStream:
         fps = cap.get(cv2.CAP_PROP_FPS)
         current_frame_number = 0
         max_first_frame_number = Video360.frame_number_from_angle(config.TURNTABLE_RPM, fps, config.MAX_ANGLE_ROTATION_FIRST_FRAME)
-        max_total_frame_number = Video360.frame_number_from_angle(config.TURNTABLE_RPM, fps, config.DETECT_FRAMES_COUNT * 90)
+        max_total_frame_number = Video360.frame_number_from_angle(config.TURNTABLE_RPM, fps, config.DETECT_FRAMES_COUNT * config.DETECT_FRAMES_STEP - config.DETECT_FRAMES_STEP)
+        next_frame_increment_number = round(Video360.frame_number_from_angle(config.TURNTABLE_RPM, fps, 90))
 
         print("Video-Stream: Analyzing stream with", fps, "fps")
 
         detected_frames: List[AlignedFrame] = []
         first_frame = None
+        first_frame_number = None
         
-        while first_frame is None and current_frame_number <= max_first_frame_number or current_frame_number <= max_total_frame_number:
+        while first_frame is None and current_frame_number <= max_first_frame_number or first_frame is not None and current_frame_number <= first_frame_number + max_total_frame_number:
             ret, frame = cap.read()
             if not ret:
                 print("Video-Stream: Error reading next frame")
@@ -56,32 +58,48 @@ class TurntableQuadrantStream:
 
             debug_stream = frame.copy()
             cv2.rectangle(debug_stream, config.ROI_UPPER_LEFT, config.ROI_BOTTOM_RIGHT, (100, 50, 200), 5)
-            cv2.imshow("[Live] Video-Stream (close with 'q')", debug_stream)
+
+            if (not config.DEPLOY_ENV_PROD):
+                cv2.imshow("[Live] Video-Stream (close with 'q')", debug_stream)
 
             roi = frame[config.ROI_UPPER_LEFT[1] : config.ROI_BOTTOM_RIGHT[1], config.ROI_UPPER_LEFT[0] : config.ROI_BOTTOM_RIGHT[0]]
 
+            # Detecting first frame
             if first_frame is None:
 
                 first_frame = self.detect_aligned_frame(roi)
 
                 if first_frame is not None:
                     first_frame.frame_angle = Video360.angle_from_frame_number(config.TURNTABLE_RPM, fps, current_frame_number)
+                    first_frame_number = current_frame_number
                     detected_frames.append(first_frame)
                     print(f"First frame found after {round(current_frame_number / fps, 2)}s at {round(first_frame.frame_angle, 2)}° with {first_frame.orientation}!")
-                    cv2.imshow(f"First frame ({round(current_frame_number / fps, 2)}s - {round(first_frame.frame_angle, 2)} deg - {first_frame.orientation})", first_frame.debug_frame)
-
+                    if (not config.DEPLOY_ENV_PROD):
+                        cv2.imshow(f"First frame ({round(current_frame_number / fps, 2)}s - {round(first_frame.frame_angle, 2)} deg - {first_frame.orientation})", first_frame.debug_frame)
+            
+            # Extracting next frames
+            if first_frame is not None and current_frame_number != first_frame_number and (current_frame_number - first_frame_number) % next_frame_increment_number == 0:
+                next_frame = AlignedFrame(roi, roi, 0, first_frame.center, EOrientierung.NORD, first_frame.horizontal_line, first_frame.vertical_line)
+                next_frame.frame_angle = Video360.angle_from_frame_number(config.TURNTABLE_RPM, fps, current_frame_number)
+                next_frame = self.__set_orientation(next_frame)
+                detected_frames.append(next_frame)
+                print(f"Next frame extracted after {round(current_frame_number / fps, 2)}s at {round(next_frame.frame_angle, 2)}° with {next_frame.orientation}!")
+                if (not config.DEPLOY_ENV_PROD):
+                        cv2.imshow(f"Next frame ({round(current_frame_number / fps, 2)}s - {round(next_frame.frame_angle, 2)} deg - {next_frame.orientation})", next_frame.debug_frame)
+                    
             current_frame_number += 1
 
             # Abort
             if cv2.waitKey(1) & 0xFF == ord("q"):
                 break
 
-            # TODO: Remove
             # Reset
             if cv2.waitKey(1) & 0xFF == ord("r"):
                 print("Reset")
                 first_frame = None
+                first_frame_number = None
                 current_frame_number = 0
+                detected_frames = []
 
         print(f"Table rotated maximum of {config.DETECT_FRAMES_COUNT * 90}°")
 
@@ -116,7 +134,7 @@ class TurntableQuadrantStream:
                 color = (int(color[0]), int(color[1]), int(color[2]))
                 cv2.line(detected_lines_frame, (x1, y1), (x2, y2), color, 2)
 
-        if not config.DEPLOY_ENV_PROD and config.DEBUG_SHOW_HOUGH_LINES:
+        if (not config.DEPLOY_ENV_PROD and config.DEBUG_SHOW_HOUGH_LINES):
             cv2.imshow("[Live] Hough Lines", detected_lines_frame)
 
         lines.sort(key=lambda x: x.get_length(), reverse=True)
@@ -153,9 +171,9 @@ class TurntableQuadrantStream:
         rho = 1  # distance resolution in pixels of the Hough grid
         theta = np.pi / 180  # angular resolution in radians of the Hough grid
 
-        if not config.DEPLOY_ENV_PROD and config.DEBUG_SHOW_WHITE_MASK:
+        if (not config.DEPLOY_ENV_PROD and config.DEBUG_SHOW_WHITE_MASK):
             cv2.imshow("[Live] White mask", mask_white)
-        if not config.DEPLOY_ENV_PROD and config.DEBUG_SHOW_CONTOUR:
+        if (not config.DEPLOY_ENV_PROD and config.DEBUG_SHOW_CONTOUR):
             cv2.imshow("[Live] Contours", quadrant_edges)
         
         lines = cv2.HoughLinesP(quadrant_edges, rho, theta, config.LINE_THRESHOLD, np.array([]), config.LINE_MIN_PX_LENGTH, config.LINE_MAX_GAP)

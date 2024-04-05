@@ -44,8 +44,8 @@ class ConfigProperties:
     ANGLE_DEVIATION_THRESHOLD_DEG = 2       # How much the vertical or horizontal line is allowed to deviate. (±)
     DETECT_FRAMES_COUNT: int = 4            # Maximal count of aligned frames to be detected and returned.
     DETECT_FRAMES_STEP: int = 90
-    MAX_ANGLE_ROTATION_FIRST_FRAME = 92
-    TURNTABLE_RPM = 2                       # Turntable rotation speed given as rotations per minute. Specified in PREN is 2rpm (12°/s).
+    MAX_ANGLE_ROTATION_FIRST_FRAME = 95
+    TURNTABLE_RPM = 2.3                       # Turntable rotation speed given as rotations per minute. Specified in PREN is 2rpm (12°/s). -> Real RPM deviates!
 
     # API & RTSP Konfiguration
     RTSP_IP = "147.88.48.131:554" if DEPLOY_ENV_PROD else "147.88.48.131:554"
@@ -95,8 +95,8 @@ class ConfigProperties:
         self.ANGLE_DEVIATION_THRESHOLD_DEG = 2 
         self.DETECT_FRAMES_COUNT: int = 4
         self.DETECT_FRAMES_STEP: int = 90
-        self.MAX_ANGLE_ROTATION_FIRST_FRAME = 92
-        self.TURNTABLE_RPM = 2 
+        self.MAX_ANGLE_ROTATION_FIRST_FRAME = 95
+        self.TURNTABLE_RPM = 2.3
         self.RTSP_IP = "147.88.48.131:554" if self.DEPLOY_ENV_PROD else "147.88.48.131:554"
         self.RTSP_PATH = "/axis-media/media.amp"
         self.RTSP_URL = self.RTSP_IP + self.RTSP_PATH
