@@ -11,6 +11,7 @@ services:
       - 554:554
       - 8554:8554
       - 5003:5003
+      - 5000:5000
     # extra_hosts:
     #   - "host.docker.internal:host-gateway"
     #   - "hslu:147.88.48.131"

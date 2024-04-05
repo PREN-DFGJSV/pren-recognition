@@ -3,6 +3,7 @@ from datetime import datetime
 
 from src.communication import DbContext
 from src.model.BuildInstructionDto import BuildInstructionDto
+from src.services.RecognitionService import RecognitionService
 
 app = Flask(__name__)
 
@@ -41,6 +42,9 @@ def end():
     timer = None  # Zurücksetzen der Startzeit für den nächsten Lauf
     return str(duration)
 
+@app.route('/start')
+def start():
+    RecognitionService.analyze_turntable_video_stream()
 
 @app.route('/test')
 def test():
