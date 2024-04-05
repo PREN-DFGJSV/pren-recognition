@@ -2,7 +2,6 @@ import cv2
 
 from datetime import datetime
 
-from src.common.VideoStream import VideoStream
 from src.color_recognition.ColorRecognizer import ColorRecognizer
 from src.common.CubeHelper import CubeHelper
 from src.communication.HttpClient import HttpClient

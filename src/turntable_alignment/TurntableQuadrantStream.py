@@ -4,8 +4,7 @@ import numpy as np
 from typing import List
 from cv2.typing import MatLike
 
-from src.common.dialog import showConfigDialog
-
+from src.common.ConfigDialog import ConfigDialog
 from src.common.Video360 import Video360
 from src.enums.EOrientierung import EOrientierung
 from src.common.ColorPair import ColorPair
@@ -53,7 +52,7 @@ class TurntableQuadrantStream:
                 break
 
             if (not config.DEPLOY_ENV_PROD):
-                showConfigDialog()
+                ConfigDialog().show()
 
             debug_stream = frame.copy()
             cv2.rectangle(debug_stream, config.ROI_UPPER_LEFT, config.ROI_BOTTOM_RIGHT, (100, 50, 200), 5)
