@@ -1,9 +1,11 @@
 import numpy as np
-import src.config as config
 
 from src.common.ColorHelper import ColorHelper
 from src.enums.EOrientierung import EOrientierung
 from src.model.CubePart import CubePart
+from src.common.ConfigProperties import ConfigProperties
+
+config = ConfigProperties()
 
 
 class ColorRecognizer:

@@ -5,13 +5,15 @@ from typing import List
 from cv2.typing import MatLike
 
 from src.common.dialog import showConfigDialog
-import src.config as config
 
 from src.common.Video360 import Video360
 from src.enums.EOrientierung import EOrientierung
 from src.common.ColorPair import ColorPair
 from src.model.Line import Line
 from src.model.AlignedFrame import AlignedFrame
+from src.common.ConfigProperties import ConfigProperties
+
+config = ConfigProperties()
 
 
 # TODO: Add documentation for TurntableQuadrantStream

@@ -1,5 +1,9 @@
 import cv2
-import src.config as config
+
+from src.common.ConfigProperties import ConfigProperties
+
+config = ConfigProperties()
+
 
 class VideoStream:
     

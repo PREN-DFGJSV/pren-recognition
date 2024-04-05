@@ -1,5 +1,4 @@
 import cv2
-import src.config as config
 
 from datetime import datetime
 
@@ -10,6 +9,9 @@ from src.communication.HttpClient import HttpClient
 from src.enums.EOrientierung import EOrientierung
 from src.model.ResultDto import ResultDto
 from src.turntable_alignment.TurntableQuadrantStream import TurntableQuadrantStream
+from src.common.ConfigProperties import ConfigProperties
+
+config = ConfigProperties()
 
 
 # TODO: Add debug main with debug visualization & adjustment for parameters, cleanup main

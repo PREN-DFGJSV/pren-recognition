@@ -4,12 +4,14 @@ import numpy as np
 from typing import List
 from cv2.typing import MatLike
 
-from config import *
 from src.enums.EOrientierung import EOrientierung
 from src.common.ColorPair import ColorPair
 from src.common.Video360 import Video360
 from src.model.Line import Line
 from src.model.AlignedFrame import AlignedFrame
+from src.common.ConfigProperties import ConfigProperties
+
+config = ConfigProperties()
 
 # TODO: Add documentation for TurntableQuadrant
 class TurntableQuadrant:
@@ -139,7 +141,7 @@ class TurntableQuadrant:
         frame = self.__video360.frame_at_angle(angle)
         frame_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-        mask_white = ColorPair(LOWER_WHITE, UPPER_WHITE).get_mask(frame_hsv)
+        mask_white = ColorPair(config.LOWER_WHITE, config.UPPER_WHITE).get_mask(frame_hsv)
         mask_white = cv2.GaussianBlur(mask_white, (1, 1), 0)
         quadrant_edges = cv2.Canny(mask_white, 100, 200)
 
@@ -148,13 +150,13 @@ class TurntableQuadrant:
 
         return (
             frame, 
-            cv2.HoughLinesP(quadrant_edges, rho, theta, LINE_THRESHOLD, np.array([]), LINE_MIN_PX_LENGTH, LINE_MAX_GAP)
+            cv2.HoughLinesP(quadrant_edges, rho, theta, config.LINE_THRESHOLD, np.array([]), config.LINE_MIN_PX_LENGTH, config.LINE_MAX_GAP)
         )
     
     def __set_orientation(self, aligned_frame: AlignedFrame) -> AlignedFrame:
             
             frame_hsv = cv2.cvtColor(aligned_frame.frame, cv2.COLOR_BGR2HSV)
-            mask_white = ColorPair(LOWER_WHITE, UPPER_WHITE).get_mask(frame_hsv)
+            mask_white = ColorPair(config.LOWER_WHITE, config.UPPER_WHITE).get_mask(frame_hsv)
             mask_white = cv2.GaussianBlur(mask_white, (1, 1), 0)
 
             hor = round(aligned_frame.center.x)

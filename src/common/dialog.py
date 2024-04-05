@@ -1,5 +1,8 @@
 import tkinter as tk
-import src.config as config
+from src.common.ConfigProperties import ConfigProperties
+
+config = ConfigProperties()
+
 
 if (not config.DEPLOY_ENV_PROD):
     root = tk.Tk()
@@ -13,7 +16,7 @@ def __apply():
     config.MESSPUNKT_UNTEN_LINKS = (int(MESSPUNKT_UNTEN_LINKS_x_entry.get()), int(MESSPUNKT_UNTEN_LINKS_y_entry.get()))
     config.MESSPUNKT_UNTEN_RECHTS = (int(MESSPUNKT_UNTEN_RECHTS_x_entry.get()), int(MESSPUNKT_UNTEN_RECHTS_y_entry.get()))
 
-    print( config.ROI_UPPER_LEFT)
+    print(config.ROI_UPPER_LEFT)
 
 def __reset():
     ROI_UPPER_LEFT_x_text.set(config.ROI_UPPER_LEFT[0])

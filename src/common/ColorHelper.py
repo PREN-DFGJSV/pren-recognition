@@ -1,7 +1,9 @@
 import numpy as np
 
-import src.config as config
 from src.enums.EColor import EColor
+from src.common.ConfigProperties import ConfigProperties
+
+config = ConfigProperties()
 
 
 class ColorHelper:
