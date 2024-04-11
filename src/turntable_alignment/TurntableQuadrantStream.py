@@ -31,7 +31,7 @@ class TurntableQuadrantStream:
             "?streamprofile=" + config.RTSP_PROFILE)
          
         if cap is None or not cap.isOpened():
-            print("Video-Stream: Error accessing stream", config.RTSP_IP)
+            print("Video-Stream: Error accessing stream", config.RTSP_IP, flush=True)
             cap.get
             return None
         
@@ -41,7 +41,7 @@ class TurntableQuadrantStream:
         max_total_frame_number = Video360.frame_number_from_angle(config.TURNTABLE_RPM, fps, config.DETECT_FRAMES_COUNT * config.DETECT_FRAMES_STEP - config.DETECT_FRAMES_STEP)
         next_frame_increment_number = round(Video360.frame_number_from_angle(config.TURNTABLE_RPM, fps, 90))
 
-        print("Video-Stream: Analyzing stream with", fps, "fps")
+        print("Video-Stream: Analyzing stream with", fps, "fps on", config.RTSP_IP, flush=True)
 
         detected_frames: List[AlignedFrame] = []
         first_frame = None
@@ -50,7 +50,7 @@ class TurntableQuadrantStream:
         while first_frame is None and current_frame_number <= max_first_frame_number or first_frame is not None and current_frame_number <= first_frame_number + max_total_frame_number:
             ret, frame = cap.read()
             if not ret:
-                print("Video-Stream: Error reading next frame")
+                print("Video-Stream: Error reading next frame", flush=True)
                 break
 
             if (not config.DEPLOY_ENV_PROD):
@@ -73,7 +73,7 @@ class TurntableQuadrantStream:
                     first_frame.frame_angle = Video360.angle_from_frame_number(config.TURNTABLE_RPM, fps, current_frame_number)
                     first_frame_number = current_frame_number
                     detected_frames.append(first_frame)
-                    print(f"First frame found after {round(current_frame_number / fps, 2)}s at {round(first_frame.frame_angle, 2)}° with {first_frame.orientation}!")
+                    print(f"First frame found after {round(current_frame_number / fps, 2)}s at {round(first_frame.frame_angle, 2)}° with {first_frame.orientation}!", flush=True)
                     if (not config.DEPLOY_ENV_PROD):
                         cv2.imshow(f"First frame ({round(current_frame_number / fps, 2)}s - {round(first_frame.frame_angle, 2)} deg - {first_frame.orientation})", first_frame.debug_frame)
             
@@ -83,7 +83,7 @@ class TurntableQuadrantStream:
                 next_frame.frame_angle = Video360.angle_from_frame_number(config.TURNTABLE_RPM, fps, current_frame_number)
                 next_frame = self.__set_orientation(next_frame)
                 detected_frames.append(next_frame)
-                print(f"Next frame extracted after {round(current_frame_number / fps, 2)}s at {round(next_frame.frame_angle, 2)}° with {next_frame.orientation}!")
+                print(f"Next frame extracted after {round(current_frame_number / fps, 2)}s at {round(next_frame.frame_angle, 2)}° with {next_frame.orientation}!", flush=True)
                 if (not config.DEPLOY_ENV_PROD):
                         cv2.imshow(f"Next frame ({round(current_frame_number / fps, 2)}s - {round(next_frame.frame_angle, 2)} deg - {next_frame.orientation})", next_frame.debug_frame)
                     
@@ -95,13 +95,13 @@ class TurntableQuadrantStream:
 
             # Reset
             if cv2.waitKey(1) & 0xFF == ord("r"):
-                print("Reset")
+                print("Reset detection")
                 first_frame = None
                 first_frame_number = None
                 current_frame_number = 0
                 detected_frames = []
 
-        print(f"Table rotated maximum of {config.DETECT_FRAMES_COUNT * 90}°")
+        print(f"Table rotated maximum of {config.DETECT_FRAMES_COUNT * 90}°", flush=True)
 
         return detected_frames   
 

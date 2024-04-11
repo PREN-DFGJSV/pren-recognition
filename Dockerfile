@@ -1,5 +1,4 @@
-# FROM hdgigante/python-opencv:4.9.0-ubuntu # Unable to establish RTSP connection
-FROM python:3.12.3
+FROM python:3.12.3-bullseye
 
 WORKDIR /app
 

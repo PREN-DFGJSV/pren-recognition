@@ -16,8 +16,6 @@ class ConfigDialog:
         config.MESSPUNKT_UNTEN_LINKS = (int(self.MESSPUNKT_UNTEN_LINKS_x_entry.get()), int(self.MESSPUNKT_UNTEN_LINKS_y_entry.get()))
         config.MESSPUNKT_UNTEN_RECHTS = (int(self.MESSPUNKT_UNTEN_RECHTS_x_entry.get()), int(self.MESSPUNKT_UNTEN_RECHTS_y_entry.get()))
 
-        print(config.ROI_UPPER_LEFT)
-
     def __reset(self):
         config.reset()
         self.ROI_UPPER_LEFT_x_text.set(config.ROI_UPPER_LEFT[0])

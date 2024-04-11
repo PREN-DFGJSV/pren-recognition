@@ -5,8 +5,7 @@ services:
     container_name: 'recognition-app'
     environment:
       DEPLOY_ENV: prod                          # prod -> run webserver | dev -> execute recognition directly
-    network_mode: host
+      PYTHONUNBUFFERED: 1                       # show log output
+    # network_mode: host
     ports:
       - 5000:5000                               # or expose: - 5000
-    expose:
-      - 5000

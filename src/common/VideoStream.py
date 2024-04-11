@@ -16,13 +16,13 @@ class VideoStream:
             "?streamprofile=" + config.RTSP_PROFILE)
         
         if cap is None or not cap.isOpened():
-            print("Video-Stream: Error accessing stream ", config.RTSP_IP)
+            print("Video-Stream: Error accessing stream ", config.RTSP_IP, flush=True)
             return None
         
         while True:
             ret, frame = cap.read()
             if not ret:
-                print("Video-Stream: Error reading next frame")
+                print("Video-Stream: Error reading next frame", flush=True)
                 break
 
             cv2.rectangle(frame, config.ROI_UPPER_LEFT, config.ROI_BOTTOM_RIGHT, (100, 50, 200), 5)

@@ -41,7 +41,7 @@ class TurntableQuadrant:
         frame_angle_rotation_offsets = range(90, 270, 90)
 
         for frame_angle_rotation_offset in frame_angle_rotation_offsets:
-            print(f"Searching next aligned frame at {frame_angle_rotation_offset}° offset!")
+            print(f"Searching next aligned frame at {frame_angle_rotation_offset}° offset!", flush=True)
 
             next_frame = self.detect_next_aligned_frame(first_frame, frame_angle_rotation_offset)
             detected_frames.append(next_frame)
@@ -77,7 +77,7 @@ class TurntableQuadrant:
             aligned_frame = self.__is_frame_aligned(angle, brute_step_increment_deg)
 
             if aligned_frame is not None:
-                print(f"Aligned frame roughly at {angle}°!")
+                print(f"Aligned frame roughly at {angle}°!", flush=True)
 
                 fine_angle: float = angle - brute_step_increment_deg
                 aligned_frames: List[AlignedFrame] = []
@@ -90,7 +90,7 @@ class TurntableQuadrant:
 
                 if aligned_frames:
                     aligned_frames.sort(key=lambda x: x.vertical_line.deviation_from_vertical_deg() + x.horizontal_line.deviation_from_horizontal_deg(), reverse=False)
-                    print(f"Aligned frame exactly at {aligned_frames[0].frame_angle}°!")
+                    print(f"Aligned frame exactly at {aligned_frames[0].frame_angle}°!", flush=True)
                     aligned_frames[0] = self.__set_orientation(aligned_frames[0])
                     return aligned_frames[0]
                 
@@ -99,7 +99,7 @@ class TurntableQuadrant:
 
             angle += brute_step_increment_deg
 
-        print("No frame found!")
+        print("No frame found!", flush=True)
         return None
     
     def __is_frame_aligned(self, angle: float, angle_deviation_threshold_deg: float = 2) -> AlignedFrame:

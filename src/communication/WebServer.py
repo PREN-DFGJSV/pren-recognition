@@ -45,6 +45,7 @@ def end():
 @app.route('/start')
 def start():
     RecognitionService.analyze_turntable_video_stream()
+    return "<h1>Started</h1>"
 
 @app.route('/test')
 def test():

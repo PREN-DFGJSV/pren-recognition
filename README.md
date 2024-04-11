@@ -39,7 +39,7 @@ docker-compose up --force-recreate --build --no-deps
 
 Im Browser öffnen:
 ```sh
-http://localhost:5000/start
+http://127.0.0.1:5000/start
 ```
 
 ## Setup
