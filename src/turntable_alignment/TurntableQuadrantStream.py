@@ -58,6 +58,7 @@ class TurntableQuadrantStream:
 
             debug_stream = frame.copy()
             cv2.rectangle(debug_stream, config.ROI_UPPER_LEFT, config.ROI_BOTTOM_RIGHT, (100, 50, 200), 5)
+            cv2.rectangle(debug_stream, config.MESSPUNKT_OBEN_LINKS, (config.MESSPUNKT_OBEN_LINKS[0] + config.SEITENLAENGE_MESSFLAECHE, config.MESSPUNKT_OBEN_LINKS[1] + config.SEITENLAENGE_MESSFLAECHE) , (255, 0, 0) , 2) 
 
             if (not config.DEPLOY_ENV_PROD):
                 cv2.imshow("[Live] Video-Stream (close with 'q')", debug_stream)
