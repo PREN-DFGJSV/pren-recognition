@@ -5,7 +5,6 @@ from src.services.RecognitionService import RecognitionService
 config = ConfigProperties()
 
 
-# TODO: Add debug main with debug visualization & adjustment for parameters, cleanup main
 if __name__ == "__main__":
 
     print(f"[{'PROD' if config.DEPLOY_ENV_PROD else 'DEV'}] Start Programm...")

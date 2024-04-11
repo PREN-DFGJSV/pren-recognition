@@ -1,20 +1,12 @@
 version: '3.8'
 services:
   app:
-    build: . # image: ghcr.io/pren-dfgjsv/pren_recognition:latest # OR local -> build: .
+    build: .                                    # image: ghcr.io/pren-dfgjsv/pren_recognition:latest # OR local -> build: .
     container_name: 'recognition-app'
     environment:
-      DEPLOY_ENV: prod
-    # network_mode: host
+      DEPLOY_ENV: prod                          # prod -> run webserver | dev -> execute recognition directly
+    network_mode: host
     ports:
-      - 80:80
-      - 554:554
-      - 8554:8554
-      - 5003:5003
-      - 5000:5000
-    # extra_hosts:
-    #   - "host.docker.internal:host-gateway"
-    #   - "hslu:147.88.48.131"
-    # expose:
-    #   - 554
-    #   - 8554
+      - 5000:5000                               # or expose: - 5000
+    expose:
+      - 5000

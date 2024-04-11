@@ -24,7 +24,7 @@ class RecognitionService:
             input("Press Enter to continue...")
 
         # Bild 1 Farben auslesen
-        cr_nord = ColorRecognizer(cv2.imread("res/BGGR_RBRB/NORTH.png"), EOrientierung.NORD)
-        cr_sued = ColorRecognizer(cv2.imread("res/BGGR_RBRB/SOUTH.png"), EOrientierung.SUED)
+        cr_first = ColorRecognizer(frames[0].frame, frames[0].orientation)
+        cr_third = ColorRecognizer(frames[2].frame, frames[2].orientation)
 
-        cube = CubeHelper.merge_cube_part_to_cube(cr_nord.get_cube_part(), cr_sued.get_cube_part())
+        cube = CubeHelper.merge_cube_part_to_cube(cr_first.get_cube_part(), cr_third.get_cube_part())
