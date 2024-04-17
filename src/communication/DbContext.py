@@ -1,6 +1,8 @@
 import sqlite3
 import string
 
+from src.model.Cube import Cube
+
 
 class SQLiteDB:
     def __init__(self, db_path):
@@ -50,7 +52,7 @@ class SQLiteDB:
         result = self.cursor.fetchone()
         return result[0] == 1
 
-    def insert(self, table: string, data):
+    def __insert(self, table: string, data):
         """
             Fügt Daten in eine bestimmte Tabelle ein.
             'data' sollte ein Dictionary sein, das die Spaltennamen und Werte enthält.
@@ -61,6 +63,9 @@ class SQLiteDB:
         query = f'INSERT INTO {table} ({columns}) VALUES ({placeholders})'
         self.cursor.execute(query, tuple(data.values()))
         self.connection.commit()
+
+    def insert_cube(self, cube: Cube):
+        self.__insert("Recognition", cube.to_key_value_pair())
 
     def reset_table(self):
         """

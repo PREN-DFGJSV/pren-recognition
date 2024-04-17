@@ -9,7 +9,7 @@ class ConfigDialog:
 
     def __apply(self):
         config.ROI_UPPER_LEFT = (int(self.ROI_UPPER_LEFT_x_entry.get()), int(self.ROI_UPPER_LEFT_y_entry.get()))
-        config.ROI_BOTTOM_RIGHT = (int(self.ROI_BOTTOM_RIGHT_x_entry.get()), int(self.Rself.OI_BOTTOM_RIGHT_y_entry.get()))
+        config.ROI_BOTTOM_RIGHT = (int(self.ROI_BOTTOM_RIGHT_x_entry.get()), int(self.ROI_BOTTOM_RIGHT_y_entry.get()))
 
         config.MESSPUNKT_OBEN_LINKS = (int(self.MESSPUNKT_OBEN_LINKS_x_entry.get()), int(self.MESSPUNKT_OBEN_LINKS_y_entry.get()))
         config.MESSPUNKT_OBEN_RECHTS = (int(self.MESSPUNKT_OBEN_RECHTS_x_entry.get()), int(self.MESSPUNKT_OBEN_RECHTS_y_entry.get()))
