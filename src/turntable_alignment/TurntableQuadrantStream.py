@@ -58,12 +58,16 @@ class TurntableQuadrantStream:
 
             debug_stream = frame.copy()
             cv2.rectangle(debug_stream, config.ROI_UPPER_LEFT, config.ROI_BOTTOM_RIGHT, (100, 50, 200), 5)
-            cv2.rectangle(debug_stream, config.MESSPUNKT_OBEN_LINKS, (config.MESSPUNKT_OBEN_LINKS[0] + config.SEITENLAENGE_MESSFLAECHE, config.MESSPUNKT_OBEN_LINKS[1] + config.SEITENLAENGE_MESSFLAECHE) , (255, 0, 0) , 2) 
+            cv2.rectangle(debug_stream, self.get_messpunkt_with_roi(config.MESSPUNKT_OBEN_LINKS)[0], self.get_messpunkt_with_roi(config.MESSPUNKT_OBEN_LINKS)[1] , (255, 0, 0) , 2)
+            cv2.rectangle(debug_stream, self.get_messpunkt_with_roi(config.MESSPUNKT_UNTEN_LINKS)[0], self.get_messpunkt_with_roi(config.MESSPUNKT_UNTEN_LINKS)[1] , (255, 0, 0) , 2)
+            cv2.rectangle(debug_stream, self.get_messpunkt_with_roi(config.MESSPUNKT_OBEN_RECHTS)[0], self.get_messpunkt_with_roi(config.MESSPUNKT_OBEN_RECHTS)[1] , (255, 0, 0) , 2)
+            cv2.rectangle(debug_stream, self.get_messpunkt_with_roi(config.MESSPUNKT_UNTEN_RECHTS)[0], self.get_messpunkt_with_roi(config.MESSPUNKT_UNTEN_RECHTS)[1] , (255, 0, 0) , 2)
 
             if (not config.DEPLOY_ENV_PROD):
                 cv2.imshow("[Live] Video-Stream (close with 'q')", debug_stream)
 
             roi = frame[config.ROI_UPPER_LEFT[1] : config.ROI_BOTTOM_RIGHT[1], config.ROI_UPPER_LEFT[0] : config.ROI_BOTTOM_RIGHT[0]]
+
 
             # Detecting first frame
             if first_frame is None:
@@ -77,7 +81,7 @@ class TurntableQuadrantStream:
                     print(f"First frame found after {round(current_frame_number / fps, 2)}s at {round(first_frame.frame_angle, 2)}° with {first_frame.orientation}!", flush=True)
                     if (not config.DEPLOY_ENV_PROD):
                         cv2.imshow(f"First frame ({round(current_frame_number / fps, 2)}s - {round(first_frame.frame_angle, 2)} deg - {first_frame.orientation})", first_frame.debug_frame)
-            
+
             # Extracting next frames
             if first_frame is not None and current_frame_number != first_frame_number and (current_frame_number - first_frame_number) % next_frame_increment_number == 0:
                 next_frame = AlignedFrame(roi, roi, 0, first_frame.center, EOrientierung.NORD, first_frame.horizontal_line, first_frame.vertical_line)
@@ -86,25 +90,19 @@ class TurntableQuadrantStream:
                 detected_frames.append(next_frame)
                 print(f"Next frame extracted after {round(current_frame_number / fps, 2)}s at {round(next_frame.frame_angle, 2)}° with {next_frame.orientation}!", flush=True)
                 if (not config.DEPLOY_ENV_PROD):
-                        cv2.imshow(f"Next frame ({round(current_frame_number / fps, 2)}s - {round(next_frame.frame_angle, 2)} deg - {next_frame.orientation})", next_frame.debug_frame)
-                    
+                    cv2.imshow(f"Next frame ({round(current_frame_number / fps, 2)}s - {round(next_frame.frame_angle, 2)} deg - {next_frame.orientation})", next_frame.debug_frame)
+
             current_frame_number += 1
-
-            # Abort
-            if cv2.waitKey(1) & 0xFF == ord("q"):
-                break
-
-            # Reset
-            if cv2.waitKey(1) & 0xFF == ord("r"):
-                print("Reset detection")
-                first_frame = None
-                first_frame_number = None
-                current_frame_number = 0
-                detected_frames = []
 
         print(f"Table rotated maximum of {config.DETECT_FRAMES_COUNT * 90}°", flush=True)
 
-        return detected_frames   
+        return detected_frames
+
+    def get_messpunkt_with_roi(self, punkt: tuple) -> tuple:
+        punkt1 = (punkt[0] + config.ROI_UPPER_LEFT[0], punkt[1] + config.ROI_UPPER_LEFT[1])
+        punkt2 = (punkt[0] + config.ROI_UPPER_LEFT[0] + config.SEITENLAENGE_MESSFLAECHE, punkt[1] + config.ROI_UPPER_LEFT[1] + config.SEITENLAENGE_MESSFLAECHE)
+        return punkt1, punkt2
+
 
     def detect_aligned_frame(self, frame) -> AlignedFrame:
 

@@ -10,7 +10,7 @@ class ConfigProperties:
     DEPLOY_ENV_PROD = True if DEPLOY_ENV == "prod" else False
 
     # Farberkennung
-    MESSPUNKT_OBEN_LINKS = (890, 150)
+    MESSPUNKT_OBEN_LINKS = (150, 60)
     MESSPUNKT_OBEN_RECHTS = (1000, 150)
     MESSPUNKT_UNTEN_LINKS = (890, 500)
     MESSPUNKT_UNTEN_RECHTS = (1000, 500)
@@ -72,11 +72,11 @@ class ConfigProperties:
     def reset(self):
         self.DEPLOY_ENV = os.getenv("DEPLOY_ENV")
         self.DEPLOY_ENV_PROD = True if self.DEPLOY_ENV == "prod" else False
-        self.MESSPUNKT_OBEN_LINKS = (890, 150)
-        self.MESSPUNKT_OBEN_RECHTS = (1000, 150)
-        self.MESSPUNKT_UNTEN_LINKS = (890, 500)
-        self.MESSPUNKT_UNTEN_RECHTS = (1000, 500)
-        self.SEITENLAENGE_MESSFLAECHE = 30
+        self.MESSPUNKT_OBEN_LINKS = (190, 10)
+        self.MESSPUNKT_OBEN_RECHTS = (250, 10)
+        self.MESSPUNKT_UNTEN_LINKS = (190, 150)
+        self.MESSPUNKT_UNTEN_RECHTS = (250, 150)
+        self.SEITENLAENGE_MESSFLAECHE = 15
         self.ROI_UPPER_LEFT = (100, 50)
         self.ROI_BOTTOM_RIGHT = (510, 350)
         self.LOWER_RED = np.array([0, 50, 50])
