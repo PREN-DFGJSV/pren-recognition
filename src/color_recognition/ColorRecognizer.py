@@ -35,10 +35,10 @@ class ColorRecognizer:
         return tuple(map(int, avg_color[::1]))
 
     def get_cube_part(self) -> CubePart:
-        farbe1 = self.__get_avg_color_from_area(config.MESSPUNKT_OBEN_LINKS)
-        farbe2 = self.__get_avg_color_from_area(config.MESSPUNKT_OBEN_RECHTS)
-        farbe3 = self.__get_avg_color_from_area(config.MESSPUNKT_UNTEN_LINKS)
-        farbe4 = self.__get_avg_color_from_area(config.MESSPUNKT_UNTEN_RECHTS)
+        farbe1 = self.__get_avg_color_from_area(config.MESSPUNKT_UNTEN_LINKS)
+        farbe2 = self.__get_avg_color_from_area(config.MESSPUNKT_UNTEN_RECHTS)
+        farbe3 = self.__get_avg_color_from_area(config.MESSPUNKT_OBEN_LINKS)
+        farbe4 = self.__get_avg_color_from_area(config.MESSPUNKT_OBEN_RECHTS)
 
         return CubePart(orientierung=self.orientierung,
                         unten_links=ColorHelper.get_color(farbe1),
