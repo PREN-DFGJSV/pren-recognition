@@ -57,7 +57,7 @@ class TurntableQuadrantStream:
                 ConfigDialog().show()
 
             debug_stream = frame.copy()
-            cv2.rectangle(debug_stream, config.ROI_UPPER_LEFT, config.ROI_BOTTOM_RIGHT, (100, 50, 200), 5)
+            cv2.rectangle(debug_stream, config.ROI_UPPER_LEFT, config.ROI_BOTTOM_RIGHT, (100, 50, 200), 5) 
             cv2.rectangle(debug_stream, self.get_messpunkt_with_roi(config.MESSPUNKT_OBEN_LINKS)[0], self.get_messpunkt_with_roi(config.MESSPUNKT_OBEN_LINKS)[1] , (255, 0, 0) , 2)
             cv2.rectangle(debug_stream, self.get_messpunkt_with_roi(config.MESSPUNKT_UNTEN_LINKS)[0], self.get_messpunkt_with_roi(config.MESSPUNKT_UNTEN_LINKS)[1] , (255, 0, 0) , 2)
             cv2.rectangle(debug_stream, self.get_messpunkt_with_roi(config.MESSPUNKT_OBEN_RECHTS)[0], self.get_messpunkt_with_roi(config.MESSPUNKT_OBEN_RECHTS)[1] , (255, 0, 0) , 2)
@@ -67,7 +67,7 @@ class TurntableQuadrantStream:
                 cv2.imshow("[Live] Video-Stream (close with 'q')", debug_stream)
 
             roi = frame[config.ROI_UPPER_LEFT[1] : config.ROI_BOTTOM_RIGHT[1], config.ROI_UPPER_LEFT[0] : config.ROI_BOTTOM_RIGHT[0]]
-
+            roi_debug = roi.copy()
 
             # Detecting first frame
             if first_frame is None:
@@ -84,7 +84,13 @@ class TurntableQuadrantStream:
 
             # Extracting next frames
             if first_frame is not None and current_frame_number != first_frame_number and (current_frame_number - first_frame_number) % next_frame_increment_number == 0:
-                next_frame = AlignedFrame(roi, roi, 0, first_frame.center, EOrientierung.NORD, first_frame.horizontal_line, first_frame.vertical_line)
+
+                cv2.rectangle(roi_debug, config.MESSPUNKT_OBEN_LINKS, self.get_messpunkt_end(config.MESSPUNKT_OBEN_LINKS), (255, 0, 0), 2)
+                cv2.rectangle(roi_debug, config.MESSPUNKT_UNTEN_LINKS, self.get_messpunkt_end(config.MESSPUNKT_UNTEN_LINKS), (255, 0, 0), 2)
+                cv2.rectangle(roi_debug, config.MESSPUNKT_OBEN_RECHTS, self.get_messpunkt_end(config.MESSPUNKT_OBEN_RECHTS), (255, 0, 0), 2)
+                cv2.rectangle(roi_debug, config.MESSPUNKT_UNTEN_RECHTS, self.get_messpunkt_end(config.MESSPUNKT_UNTEN_RECHTS), (255, 0, 0), 2)
+
+                next_frame = AlignedFrame(roi, roi_debug, 0, first_frame.center, EOrientierung.NORD, first_frame.horizontal_line, first_frame.vertical_line)
                 next_frame.frame_angle = Video360.angle_from_frame_number(config.TURNTABLE_RPM, fps, current_frame_number)
                 next_frame = self.__set_orientation(next_frame)
                 detected_frames.append(next_frame)
@@ -97,12 +103,14 @@ class TurntableQuadrantStream:
         print(f"Table rotated maximum of {config.DETECT_FRAMES_COUNT * 90}°", flush=True)
 
         return detected_frames
-
+    
     def get_messpunkt_with_roi(self, punkt: tuple) -> tuple:
         punkt1 = (punkt[0] + config.ROI_UPPER_LEFT[0], punkt[1] + config.ROI_UPPER_LEFT[1])
         punkt2 = (punkt[0] + config.ROI_UPPER_LEFT[0] + config.SEITENLAENGE_MESSFLAECHE, punkt[1] + config.ROI_UPPER_LEFT[1] + config.SEITENLAENGE_MESSFLAECHE)
         return punkt1, punkt2
-
+    
+    def get_messpunkt_end(self, punkt: tuple) -> tuple:
+        return (punkt[0]+ config.SEITENLAENGE_MESSFLAECHE, punkt[1] + config.SEITENLAENGE_MESSFLAECHE)
 
     def detect_aligned_frame(self, frame) -> AlignedFrame:
 
@@ -153,6 +161,11 @@ class TurntableQuadrantStream:
             cv2.line(debug_frame, horizontal_line.get_point1_coordinates(), horizontal_line.get_point2_coordinates(), (255, 0, 0), 10)
             cv2.line(debug_frame, vertical_line.get_point1_coordinates(), vertical_line.get_point2_coordinates(), (255, 0, 0), 10)
             cv2.circle(debug_frame, (int(np.round(x)), int(np.round(y))), 4, (0, 255, 0), 5)
+
+            cv2.rectangle(debug_frame, config.MESSPUNKT_OBEN_LINKS, self.get_messpunkt_end(config.MESSPUNKT_OBEN_LINKS), (255, 0, 0), 2)
+            cv2.rectangle(debug_frame, config.MESSPUNKT_UNTEN_LINKS, self.get_messpunkt_end(config.MESSPUNKT_UNTEN_LINKS), (255, 0, 0), 2)
+            cv2.rectangle(debug_frame, config.MESSPUNKT_OBEN_RECHTS, self.get_messpunkt_end(config.MESSPUNKT_OBEN_RECHTS), (255, 0, 0), 2)
+            cv2.rectangle(debug_frame, config.MESSPUNKT_UNTEN_RECHTS, self.get_messpunkt_end(config.MESSPUNKT_UNTEN_RECHTS), (255, 0, 0), 2)
 
             return AlignedFrame(frame, debug_frame, 0, intersection_point, EOrientierung.NORD, horizontal_line, vertical_line)
 

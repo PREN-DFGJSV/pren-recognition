@@ -10,11 +10,11 @@ class ConfigProperties:
     DEPLOY_ENV_PROD = True if DEPLOY_ENV == "prod" else False
 
     # Farberkennung
-    MESSPUNKT_OBEN_LINKS = (150, 60)
-    MESSPUNKT_OBEN_RECHTS = (1000, 150)
-    MESSPUNKT_UNTEN_LINKS = (890, 500)
-    MESSPUNKT_UNTEN_RECHTS = (1000, 500)
-    SEITENLAENGE_MESSFLAECHE = 30
+    MESSPUNKT_OBEN_LINKS = (190, 10)
+    MESSPUNKT_OBEN_RECHTS = (250, 10)
+    MESSPUNKT_UNTEN_LINKS = (190, 150)
+    MESSPUNKT_UNTEN_RECHTS = (250, 150)
+    SEITENLAENGE_MESSFLAECHE = 15
 
     # Camera/Frame Region of Interest
     ROI_UPPER_LEFT = (100, 50)
@@ -61,6 +61,7 @@ class ConfigProperties:
     DEBUG_SHOW_CONTOUR = False
     DEBUG_SHOW_HOUGH_LINES = True
     DEBUG_SHOW_DETECTED_FRAME = True
+    DEBUG_SHOW_COLORS = True
 
     def __new__(cls):
         if (cls.__instance is None):
@@ -108,3 +109,4 @@ class ConfigProperties:
         self.DEBUG_SHOW_CONTOUR = False
         self.DEBUG_SHOW_HOUGH_LINES = True
         self.DEBUG_SHOW_DETECTED_FRAME = True
+        self.DEBUG_SHOW_COLORS = True

@@ -24,7 +24,17 @@ class RecognitionService:
             input("Press Enter to continue...")
 
         # Bild 1 Farben auslesen
-        # cr_first = ColorRecognizer(frames[0].frame, frames[0].orientation)
-        # cr_third = ColorRecognizer(frames[2].frame, frames[2].orientation)
+        cr_first = ColorRecognizer(frames[0].frame, frames[0].orientation)
+        cr_third = ColorRecognizer(frames[2].frame, frames[2].orientation)
+
+        cube1 = cr_first.get_cube_part()
+        cube2 = cr_third.get_cube_part()
+
+        print(cube1)
+        print(cube2)
+
+        # Wait for continue
+        if (not config.DEPLOY_ENV_PROD):
+            input("Press Enter to continue...")
 
         # cube = CubeHelper.merge_cube_part_to_cube(cr_first.get_cube_part(), cr_third.get_cube_part())
