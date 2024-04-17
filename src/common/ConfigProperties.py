@@ -21,8 +21,8 @@ class ConfigProperties:
     ROI_BOTTOM_RIGHT = (510, 350)
 
     # Farbbereiche
-    LOWER_RED = np.array([0, 50, 50])
-    UPPER_RED = np.array([10, 255, 255])
+    LOWER_RED = np.array([30, 25, 104])
+    UPPER_RED = np.array([68, 63, 288])
 
     LOWER_YELLOW = np.array([22, 93, 0])
     UPPER_YELLOW = np.array([45, 255, 255])
@@ -61,7 +61,7 @@ class ConfigProperties:
     DEBUG_SHOW_CONTOUR = False
     DEBUG_SHOW_HOUGH_LINES = True
     DEBUG_SHOW_DETECTED_FRAME = True
-    DEBUG_SHOW_COLORS = True
+    DEBUG_SHOW_COLOR_PICKER = True
 
     def __new__(cls):
         if (cls.__instance is None):
@@ -80,8 +80,8 @@ class ConfigProperties:
         self.SEITENLAENGE_MESSFLAECHE = 15
         self.ROI_UPPER_LEFT = (100, 50)
         self.ROI_BOTTOM_RIGHT = (510, 350)
-        self.LOWER_RED = np.array([0, 50, 50])
-        self.UPPER_RED = np.array([10, 255, 255])
+        self.LOWER_RED = np.array([30, 25, 104])
+        self.UPPER_RED = np.array([68, 63, 288])
         self.LOWER_YELLOW = np.array([22, 93, 0])
         self.UPPER_YELLOW = np.array([45, 255, 255])
         self.LOWER_BLUE = np.array([110, 50, 50])
@@ -109,4 +109,4 @@ class ConfigProperties:
         self.DEBUG_SHOW_CONTOUR = False
         self.DEBUG_SHOW_HOUGH_LINES = True
         self.DEBUG_SHOW_DETECTED_FRAME = True
-        self.DEBUG_SHOW_COLORS = True
+        self.DEBUG_SHOW_COLOR_PICKER = True
