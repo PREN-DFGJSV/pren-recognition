@@ -18,10 +18,6 @@ class RecognitionService:
         if frames is None or len(frames) == 0:
             print("No frames found!", flush=True)
             return
-        
-        # Wait for continue
-        if (not config.DEPLOY_ENV_PROD):
-            input("Press Enter to continue...")
 
         # Bild 1 Farben auslesen
         cr_first = ColorRecognizer(frames[0].frame, frames[0].orientation)

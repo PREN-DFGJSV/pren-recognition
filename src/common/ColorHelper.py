@@ -19,9 +19,9 @@ class ColorHelper:
             return EColor.YELLOW
         elif ColorHelper.__is_within_range(hsv_value, config.LOWER_BLUE, config.UPPER_BLUE):
             return EColor.BLUE
-        elif ColorHelper.__is_within_range(hsv_value, config.LOWER_WHITE, config.UPPER_WHITE):
-            return EColor.WHITE
-        elif ColorHelper.__is_within_range(hsv_value, config.LOWER_BLACK, config.UPPER_BLACK):
-            return EColor.BLACK
+        # elif ColorHelper.__is_within_range(hsv_value, config.LOWER_WHITE, config.UPPER_WHITE):
+        #     return EColor.WHITE
+        # elif ColorHelper.__is_within_range(hsv_value, config.LOWER_BLACK, config.UPPER_BLACK):
+        #     return EColor.BLACK
         else:
             return EColor.UNDEFINED
