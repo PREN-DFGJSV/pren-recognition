@@ -1,5 +1,6 @@
 from flask import Flask, Response
 from datetime import datetime
+from threading import Thread
 
 from src.communication import DbContext
 from src.model.BuildInstructionDto import BuildInstructionDto
@@ -44,9 +45,10 @@ def end():
 
 @app.route('/start')
 def start():
-    RecognitionService.analyze_turntable_video_stream()
-    return "<h1>Started</h1>"
-
+    thread = Thread(target=RecognitionService.analyze_turntable_video_stream())
+    thread.start()
+    return 'Done', 200
+    
 @app.route('/test')
 def test():
     # Erstelle eine Liste von BuildInstructionDto Objekten
