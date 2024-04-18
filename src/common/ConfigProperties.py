@@ -61,7 +61,8 @@ class ConfigProperties:
     DEBUG_SHOW_CONTOUR = False
     DEBUG_SHOW_HOUGH_LINES = True
     DEBUG_SHOW_DETECTED_FRAME = True
-    DEBUG_SHOW_COLOR_PICKER = True
+    DEBUG_SHOW_COLOR_PICKER = False
+    DEBUG_SHOW_COLOR_MASK = False
 
     def __new__(cls):
         if (cls.__instance is None):
@@ -109,4 +110,5 @@ class ConfigProperties:
         self.DEBUG_SHOW_CONTOUR = False
         self.DEBUG_SHOW_HOUGH_LINES = True
         self.DEBUG_SHOW_DETECTED_FRAME = True
-        self.DEBUG_SHOW_COLOR_PICKER = True
+        self.DEBUG_SHOW_COLOR_PICKER = False
+        self.DEBUG_SHOW_COLOR_MASK = False

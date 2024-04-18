@@ -94,7 +94,7 @@ class ColorRecognizer:
         result[red_mask > 0] = red_rgb
 
         # Ergebnis anzeigen
-        if not config.DEPLOY_ENV_PROD:
+        if not config.DEPLOY_ENV_PROD and config.DEBUG_SHOW_COLOR_MASK:
             cv2.imshow(f'Masked Frame {uuid.uuid4()}', result)
 
         return result
