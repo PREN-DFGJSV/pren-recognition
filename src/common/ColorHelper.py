@@ -8,20 +8,16 @@ config = ConfigProperties()
 
 class ColorHelper:
     @staticmethod
-    def __is_within_range(value, lower_bound, upper_bound):
-        return np.all(lower_bound <= value) and np.all(value <= upper_bound)
+    def get_color(bgr_value: tuple) -> EColor:
+        # Farbkanäle extrahieren
+        b, g, r = bgr_value
 
-    @staticmethod
-    def get_color(hsv_value) -> EColor:
-        if ColorHelper.__is_within_range(hsv_value, config.LOWER_RED, config.UPPER_RED):
-            return EColor.RED
-        elif ColorHelper.__is_within_range(hsv_value, config.LOWER_YELLOW, config.UPPER_YELLOW):
-            return EColor.YELLOW
-        elif ColorHelper.__is_within_range(hsv_value, config.LOWER_BLUE, config.UPPER_BLUE):
+        # Farbnamen basierend auf den Farbwerten bestimmen
+        if b > 200 and g < 100 and r < 100:
             return EColor.BLUE
-        # elif ColorHelper.__is_within_range(hsv_value, config.LOWER_WHITE, config.UPPER_WHITE):
-        #     return EColor.WHITE
-        # elif ColorHelper.__is_within_range(hsv_value, config.LOWER_BLACK, config.UPPER_BLACK):
-        #     return EColor.BLACK
+        elif b < 100 and g > 200 and r > 200:
+            return EColor.YELLOW
+        elif b < 100 and g < 100 and r > 200:
+            return EColor.RED
         else:
             return EColor.UNDEFINED
