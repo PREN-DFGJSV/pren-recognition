@@ -5,9 +5,11 @@ from threading import Thread
 from src.communication import DbContext
 from src.model.BuildInstructionDto import BuildInstructionDto
 from src.services.RecognitionService import RecognitionService
+from src.common.ConfigProperties import ConfigProperties
 
+
+config = ConfigProperties()
 app = Flask(__name__)
-
 timer: datetime = None
 
 
@@ -114,5 +116,5 @@ def get_buildinstructions_from_db(element_id: int, db_context: DbContext.SQLiteD
 
 if __name__ == '__main__':
     # Starte den Flask Webserver
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=config.DEPLOY_PORT)
 

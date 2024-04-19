@@ -8,6 +8,7 @@ class ConfigProperties:
     # Environment
     DEPLOY_ENV = os.getenv("DEPLOY_ENV")
     DEPLOY_ENV_PROD = True if DEPLOY_ENV == "prod" else False
+    DEPLOY_PORT = os.getenv("PORT")
 
     # Farberkennung
     MESSPUNKT_OBEN_LINKS = (190, 10)
@@ -74,6 +75,7 @@ class ConfigProperties:
     def reset(self):
         self.DEPLOY_ENV = os.getenv("DEPLOY_ENV")
         self.DEPLOY_ENV_PROD = True if self.DEPLOY_ENV == "prod" else False
+        self.DEPLOY_PORT = os.getenv("PORT")
         self.MESSPUNKT_OBEN_LINKS = (190, 10)
         self.MESSPUNKT_OBEN_RECHTS = (250, 10)
         self.MESSPUNKT_UNTEN_LINKS = (190, 150)

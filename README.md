@@ -42,6 +42,12 @@ Im Browser öffnen:
 http://127.0.0.1:5000/start
 ```
 
+### Or manual build and run
+```sh
+docker build -t pren/recognition:latest .
+docker run -p 5000:5000 -e DEPLOY_ENV='prod' -e PYTHONUNBUFFERED='1' -e PORT='5000' pren/recognition:latest
+```
+
 ## Setup
 
 Run locally

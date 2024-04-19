@@ -6,6 +6,6 @@ services:
     environment:
       DEPLOY_ENV: prod                          # prod -> run webserver | dev -> execute recognition directly
       PYTHONUNBUFFERED: 1                       # show log output
-    # network_mode: host
+      PORT: 5000                                # exposed port
     ports:
       - 5000:5000                               # or expose: - 5000
