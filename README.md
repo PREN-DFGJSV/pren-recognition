@@ -48,6 +48,18 @@ docker build -t pren/recognition:latest .
 docker run -p 5000:5000 -e DEPLOY_ENV='prod' -e PYTHONUNBUFFERED='1' -e PORT='5000' pren/recognition:latest
 ```
 
+pren-420709
+
+```sh
+docker build -t pren/recognition:latest .
+docker run -p 5000:5000 -e DEPLOY_ENV='prod' -e PYTHONUNBUFFERED='1' -e PORT='5000' pren/recognition:latest
+```
+
+## Docker cloud
+- URL: https://pren-recognition-r35oqtcxna-oa.a.run.app/reset
+- Logs: https://cloudlogging.app.goo.gl/9e8VreZX2VDB5dUx8
+
+
 ## Setup
 
 Run locally
