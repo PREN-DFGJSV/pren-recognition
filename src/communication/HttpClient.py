@@ -8,6 +8,6 @@ class HttpClient:
         self.url = url
         self.auth = auth
 
-    def post_dto(self, dto: BaseDto) -> string:
+    def post_dto(self, dto: BaseDto) -> int:
         result = requests.post(url=self.url, auth=self.auth, json=dto.to_json())
         return result.status_code

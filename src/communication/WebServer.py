@@ -6,7 +6,7 @@ from src.communication import DbContext
 from src.model.BuildInstructionDto import BuildInstructionDto
 from src.services.RecognitionService import RecognitionService
 from src.common.ConfigProperties import ConfigProperties
-
+from src.services.ValidationService import ValidationService
 
 config = ConfigProperties()
 app = Flask(__name__)
@@ -16,7 +16,7 @@ timer: datetime = None
 @app.route('/<int:result_id>/result')
 def get_result(result_id):
     global timer
-    db = DbContext.SQLiteDB("results.db")
+    db = DbContext.SQLiteDB(ConfigProperties.DATABASE_NAME)
     if timer is None:
         timer = datetime.now()
 
@@ -42,15 +42,19 @@ def end():
         return 'Error', 400
     end_time = datetime.now()
     duration = end_time - timer
+    thread = Thread(target=ValidationService.send_to_validation_server(duration))
+    thread.start()
     timer = None  # Zurücksetzen der Startzeit für den nächsten Lauf
     return str(duration)
+
 
 @app.route('/start')
 def start():
     thread = Thread(target=RecognitionService.analyze_turntable_video_stream())
     thread.start()
     return 'Done', 200
-    
+
+
 @app.route('/test')
 def test():
     # Erstelle eine Liste von BuildInstructionDto Objekten
@@ -71,7 +75,7 @@ def test():
 
 @app.route('/reset')
 def reset():
-    db = DbContext.SQLiteDB("results.db")
+    db = DbContext.SQLiteDB(ConfigProperties.DATABASE_NAME)
     db.reset_table()
     db.close()
 

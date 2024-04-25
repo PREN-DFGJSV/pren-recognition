@@ -40,6 +40,11 @@ class SQLiteDB:
         else:
             return None
 
+    def get_max_id(self) -> int:
+        query = "SELECT MAX(id) FROM Recognition"
+        self.cursor.execute(query)
+        return self.cursor.fetchone()
+
     def recognition_exists(self, record_id: int) -> bool:
         """
         Überprüft, ob ein Eintrag mit der angegebenen ID in der Recognition Tabelle existiert.

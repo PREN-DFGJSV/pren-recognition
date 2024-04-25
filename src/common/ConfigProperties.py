@@ -56,6 +56,14 @@ class ConfigProperties:
     RTSP_PASSWORD = "463997"
     RTSP_PROFILE = "pren_profile_small"     # "pren_profile_small" or "pren_profile_med"
 
+    # Validierungsschnittstelle
+    VALIDATION_URL = "https://oawz3wjih1.executeapi.eu-central-1.amazonaws.com:5000"
+    VALIDATION_TEAM_ID = "team00"
+    VALIDATION_TOKEN = "aTdpCRIrI9CLS1"
+
+    # Database
+    DATABASE_NAME = "results.db"
+
     # Ausrichtung Linienerkennung
     DEBUG_SHOW_LIVESTREAM = True
     DEBUG_SHOW_WHITE_MASK = False
