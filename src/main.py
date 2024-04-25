@@ -22,6 +22,6 @@ if __name__ == "__main__":
             image_hsv = cv2.cvtColor(cv2.imread("res/color_picker/pick.png"), cv2.COLOR_BGR2HSV)
             cv2.imshow("Color_Picker", image_hsv)
 
-        RecognitionService.analyze_turntable_video_stream()
+        RecognitionService.test()
 
     print("End Programm...", flush=True)

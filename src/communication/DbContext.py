@@ -1,7 +1,7 @@
 import sqlite3
 import string
 
-from src.model.Cube import Cube
+from src.model.CubePart import CubePart
 
 
 class SQLiteDB:
@@ -69,8 +69,8 @@ class SQLiteDB:
         self.cursor.execute(query, tuple(data.values()))
         self.connection.commit()
 
-    def insert_cube(self, cube: Cube):
-        self.__insert("Recognition", cube.to_key_value_pair())
+    def insert_cube_part(self, cubePart: CubePart):
+        self.__insert("Recognition", cubePart.to_key_value_pair())
 
     def reset_table(self):
         """

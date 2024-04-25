@@ -46,7 +46,7 @@ class ConfigProperties:
     DETECT_FRAMES_COUNT: int = 4            # Maximal count of aligned frames to be detected and returned.
     DETECT_FRAMES_STEP: int = 90
     MAX_ANGLE_ROTATION_FIRST_FRAME = 95
-    TURNTABLE_RPM = 2.3                       # Turntable rotation speed given as rotations per minute. Specified in PREN is 2rpm (12°/s). -> Real RPM deviates!
+    TURNTABLE_RPM = 2.3                     # Turntable rotation speed given as rotations per minute. Specified in PREN is 2rpm (12°/s). -> Real RPM deviates!
 
     # API & RTSP Konfiguration
     RTSP_IP = "147.88.48.131:554" if DEPLOY_ENV_PROD else "147.88.48.131:554"
@@ -114,7 +114,7 @@ class ConfigProperties:
         self.RTSP_URL = self.RTSP_IP + self.RTSP_PATH
         self.RTSP_USERNAME = "pren"
         self.RTSP_PASSWORD = "463997"
-        self.RTSP_PROFILE = "pren_profile_small"     # "pren_profile_small" or "pren_profile_med"
+        self.RTSP_PROFILE = "pren_profile_small"
         self.DEBUG_SHOW_LIVESTREAM = True
         self.DEBUG_SHOW_WHITE_MASK = False
         self.DEBUG_SHOW_CONTOUR = False
