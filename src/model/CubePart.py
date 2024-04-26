@@ -32,13 +32,13 @@ class CubePart:
 
     def __translate_positions(self, orientierung: EOrientierung, unten_links: EColor, unten_rechts: EColor, oben_links: EColor, oben_rechts: EColor) -> None:
     
-        orientierung_offset = orientierung.value - 1
+        orientierung_offset = orientierung.value + 1
         layer2_offset = 4
 
-        unten_links_pos: int = (orientierung_offset + 2) % 8
-        unten_rechts_pos: int = (orientierung_offset + 3) % 8
-        oben_rechts_pos: int = (orientierung_offset + layer2_offset) % 8
-        oben_links_pos: int = (orientierung_offset + layer2_offset + 1) % 8
+        unten_links_pos: int = (orientierung_offset) % layer2_offset
+        unten_rechts_pos: int = (orientierung_offset + 1) % layer2_offset
+        oben_rechts_pos: int = (orientierung_offset + 2) % layer2_offset + layer2_offset
+        oben_links_pos: int = (orientierung_offset + 3) % layer2_offset + layer2_offset
 
         self.__set_pos_color(unten_links_pos, unten_links)
         self.__set_pos_color(unten_rechts_pos, unten_rechts)
