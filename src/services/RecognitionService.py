@@ -3,7 +3,7 @@ from src.enums.EOrientierung import EOrientierung
 from src.enums.EColor import EColor
 from src.turntable_alignment.TurntableQuadrantStream import TurntableQuadrantStream
 from src.common.ConfigProperties import ConfigProperties
-from src.communication import DbContext
+from src.communication import DbContext, WebServer
 
 config = ConfigProperties()
 
@@ -25,8 +25,7 @@ class RecognitionService:
             input("Press Enter to continue...")
 
     @staticmethod
-    def test():
-        print("Testing", flush=True)
+    def test_fill_with_static_data():
 
         db = DbContext.SQLiteDB("results.db")
 
@@ -67,6 +66,16 @@ class RecognitionService:
 
         cubePart4: CubePart = CubePart(EOrientierung.NORD, EColor.YELLOW, EColor.BLUE, EColor.RED, EColor.UNDEFINED)
         db.insert_cube_part(cubePart4) # p3: Y, p4: B, p6: R
+
+        # Wait for continue
+        if (not config.DEPLOY_ENV_PROD):
+            input("Press Enter to continue...")
+
+    @staticmethod
+    def test_reading_instructions():
+
+        db = DbContext.SQLiteDB("results.db")
+        print(WebServer.get_build_instructions_from_db(2, db))
 
         # Wait for continue
         if (not config.DEPLOY_ENV_PROD):

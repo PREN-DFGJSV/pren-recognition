@@ -3,10 +3,9 @@ import json
 
 
 class BuildInstructionDto(BaseDto):
-    def __init__(self, position: int, color: int, is_finished: bool):
+    def __init__(self, position: int, color: int):
         self.position = position
         self.color = color
-        self.is_finished = is_finished
 
     def to_json(self):
         """
@@ -15,6 +14,5 @@ class BuildInstructionDto(BaseDto):
         """
         return json.dumps({
             "position": self.position,
-            "color": self.color,
-            "is_finished": self.is_finished
+            "color": self.color
         }, indent=2)

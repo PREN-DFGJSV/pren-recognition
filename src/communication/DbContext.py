@@ -1,6 +1,7 @@
 import sqlite3
 import string
 
+from typing import List
 from src.model.CubePart import CubePart
 
 
@@ -39,6 +40,23 @@ class SQLiteDB:
             return dict(zip(columns, result))
         else:
             return None
+        
+    def get_recognitions_by_max_id(self, max_record_id: int) -> List[dict]:
+        if max_record_id > 3:
+            max_record_id = 3
+
+        query = "SELECT * FROM Recognition LIMIT ?"
+        self.cursor.execute(query, (max_record_id,))
+        results = self.cursor.fetchall()
+
+        if len(results) > 0:
+            recognition_results = []
+            for result in results:
+                columns = [description[0] for description in self.cursor.description]
+                recognition_results.append(dict(zip(columns, result)))
+            return recognition_results
+        else:
+            return []
 
     def get_max_id(self) -> int:
         query = "SELECT MAX(id) FROM Recognition"
