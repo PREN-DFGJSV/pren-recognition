@@ -19,7 +19,7 @@ class ConfigProperties:
 
     # Camera/Frame Region of Interest
     ROI_UPPER_LEFT = (100, 50)
-    ROI_BOTTOM_RIGHT = (510, 350)
+    ROI_BOTTOM_RIGHT = (550, 350)
 
     # Farbbereiche
     LOWER_RED = np.array([30, 25, 104])
@@ -42,10 +42,10 @@ class ConfigProperties:
     LINE_MIN_PX_LENGTH = 100                # minimum number of pixels making up a line
     LINE_MAX_GAP = 40                       # maximum gap in pixels between connectable line segments
 
-    ANGLE_DEVIATION_THRESHOLD_DEG = 2       # How much the vertical or horizontal line is allowed to deviate. (±)
+    ANGLE_DEVIATION_THRESHOLD_DEG = 4       # How much the vertical or horizontal line is allowed to deviate. (±)
     DETECT_FRAMES_COUNT: int = 4            # Maximal count of aligned frames to be detected and returned.
     DETECT_FRAMES_STEP: int = 90
-    MAX_ANGLE_ROTATION_FIRST_FRAME = 95
+    MAX_ANGLE_ROTATION_FIRST_FRAME = 275
     TURNTABLE_RPM = 2.3                     # Turntable rotation speed given as rotations per minute. Specified in PREN is 2rpm (12°/s). -> Real RPM deviates!
 
     # API & RTSP Konfiguration
@@ -57,8 +57,8 @@ class ConfigProperties:
     RTSP_PROFILE = "pren_profile_small"     # "pren_profile_small" or "pren_profile_med"
 
     # Validierungsschnittstelle
-    VALIDATION_URL = "https://oawz3wjih1.executeapi.eu-central-1.amazonaws.com:5000"
-    VALIDATION_TEAM_ID = "team00"
+    VALIDATION_URL = "https://oawz3wjih1.execute-api.eu-central-1.amazonaws.com"
+    VALIDATION_TEAM_ID = "team06"
     VALIDATION_TOKEN = "aTdpCRIrI9CLS1"
 
     # Database
@@ -90,7 +90,7 @@ class ConfigProperties:
         self.MESSPUNKT_UNTEN_RECHTS = (250, 150)
         self.SEITENLAENGE_MESSFLAECHE = 15
         self.ROI_UPPER_LEFT = (100, 50)
-        self.ROI_BOTTOM_RIGHT = (510, 350)
+        self.ROI_BOTTOM_RIGHT = (550, 350)
         self.LOWER_RED = np.array([30, 25, 104])
         self.UPPER_RED = np.array([68, 63, 288])
         self.LOWER_YELLOW = np.array([60, 175, 183])
@@ -104,10 +104,10 @@ class ConfigProperties:
         self.LINE_THRESHOLD = 50 
         self.LINE_MIN_PX_LENGTH = 100 
         self.LINE_MAX_GAP = 40 
-        self.ANGLE_DEVIATION_THRESHOLD_DEG = 2 
+        self.ANGLE_DEVIATION_THRESHOLD_DEG = 4 
         self.DETECT_FRAMES_COUNT: int = 4
         self.DETECT_FRAMES_STEP: int = 90
-        self.MAX_ANGLE_ROTATION_FIRST_FRAME = 95
+        self.MAX_ANGLE_ROTATION_FIRST_FRAME = 275
         self.TURNTABLE_RPM = 2.3
         self.RTSP_IP = "147.88.48.131:554" if self.DEPLOY_ENV_PROD else "147.88.48.131:554"
         self.RTSP_PATH = "/axis-media/media.amp"

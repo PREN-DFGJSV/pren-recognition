@@ -2,7 +2,6 @@ from flask import Flask, Response
 from datetime import datetime
 from threading import Thread
 
-from typing import List
 from src.communication import DbContext
 from src.model.BuildInstructionDto import BuildInstructionDto
 from src.services.RecognitionService import RecognitionService
@@ -21,13 +20,13 @@ def get_result(result_id):
     if timer is None:
         timer = datetime.now()
 
-    instructions = get_build_instructions_from_db(result_id, db)
+    instructions = RecognitionService.get_build_instructions_from_db(result_id, db)
 
-    if instructions.count < result_id:
+    if len(instructions) < result_id:
         return 'Warten bis nächste Scanetappe abgeschlossen ist...', 204  # HTTP-Statuscode "No Content"
 
     # Konvertiere jedes Objekt zu einem JSON-String und fasse diese in einer Liste zusammen
-    json_strings = [instruction.to_json() for instruction in get_build_instructions_from_db(result_id, db)]
+    json_strings = [instruction.to_json() for instruction in RecognitionService.get_build_instructions_from_db(result_id, db)]
 
     # Füge die JSON-Strings zu einem Gesamt-JSON-Array zusammen
     json_array_string = '[' + ', '.join(json_strings) + ']'
@@ -86,76 +85,6 @@ def reset():
     timer = None
 
     return 'Done', 200
-
-
-def get_build_instructions_from_db(element_id: int, db_context: DbContext.SQLiteDB) -> List[List[BuildInstructionDto]]:
-    recognition_results = db_context.get_recognitions_by_max_id(element_id)
-    instructions_list = []
-
-    built_pattern = [
-        None, None, None, None,
-        None, None, None, None,
-    ]
-
-    built_pattern_debug = [
-        None, None, None, None,
-        None, None, None, None,
-    ]
-
-    recognized_pattern = [
-        None, None, None, None,
-        None, None, None, None,
-    ]
-
-    recognized_pattern_debug = [
-        None, None, None, None,
-        None, None, None, None,
-    ]
-
-    # Alle instruktionen werden nach aktuellem Stand rekonstruiert
-    for recognition_result in recognition_results:
-        instructions = []
-        for pos, color in recognition_result.items():
-            if pos == 'id':  # Überspringen der id-Spalte
-                continue
-            if color is not None:
-                position = int(pos.replace("pos", ""))
-                pos = position - 1
-
-                # Check if this cube is recognized for the first time   
-                if recognized_pattern[pos] is None:
-                    print("Cube at pos", pos, "detected")
-                    recognized_pattern[pos] = BuildInstructionDto(position, int(color))
-                    recognized_pattern_debug[pos] = color
-                        
-                    # Check if lower layer
-                    if position < 5:
-                        built_pattern[pos] = recognized_pattern[pos]
-                        built_pattern_debug[pos] = color
-                        instructions.append(built_pattern[pos])
-
-                        # If it fills overhang then also append the overhang to the instruction
-                        if recognized_pattern[pos + 4] is not None:
-                            built_pattern[pos + 4] = recognized_pattern[pos + 4]
-                            built_pattern_debug[pos + 4] = color
-                            instructions.append(built_pattern[pos + 4])
-
-                    # Check if lower layer was built to place upper
-                    elif built_pattern[pos - 4] is not None:
-                        built_pattern[pos] = recognized_pattern[pos]
-                        built_pattern_debug[pos] = color
-                        instructions.append(built_pattern[pos])
-
-        print("Recog pattern:", recognized_pattern_debug)
-        print("Built pattern:", built_pattern_debug)
-
-        instructions_list.append(instructions)
-
-    # TODO-go: Usefull/needed?
-    # Überprüfen, ob alle Positionsspalten nicht NULL sind
-    # all_positions_filled = all(value is not None for key, value in current_result.items() if key.startswith('pos'))
-
-    return instructions_list
 
 
 if __name__ == '__main__':

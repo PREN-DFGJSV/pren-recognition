@@ -12,6 +12,7 @@ from src.model.Line import Line
 from src.model.AlignedFrame import AlignedFrame
 from src.color_recognition.ColorRecognizer import ColorRecognizer
 from src.common.ConfigProperties import ConfigProperties
+from src.communication import DbContext
 
 config = ConfigProperties()
 
@@ -113,10 +114,11 @@ class TurntableQuadrantStream:
     
     def __detect_color(self, frame: np.ndarray, orientation: EOrientierung) -> None:
         cr = ColorRecognizer(frame, orientation)
-        cube = cr.get_cube_part()
-        print(cube, flush=True)
+        cube_part = cr.get_cube_part()
+        print(cube_part, flush=True)
 
-        # TODO-go: Save cube part result in db
+        db = DbContext.SQLiteDB("results.db")
+        db.insert_cube_part(cube_part)
     
     def __get_point_with_roi(self, punkt: tuple) -> tuple:
         punkt1 = (punkt[0] + config.ROI_UPPER_LEFT[0], punkt[1] + config.ROI_UPPER_LEFT[1])

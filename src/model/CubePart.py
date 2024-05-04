@@ -23,6 +23,7 @@ class CubePart:
 
     def __init__(self, orientierung: EOrientierung, unten_links: EColor, unten_rechts: EColor, oben_links: EColor, oben_rechts: EColor):
         
+        self.orientierung = orientierung
         self.unten_links = unten_links
         self.unten_rechts = unten_rechts
         self.oben_links = oben_links
