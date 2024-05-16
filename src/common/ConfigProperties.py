@@ -84,13 +84,13 @@ class ConfigProperties:
         self.DEPLOY_ENV = os.getenv("DEPLOY_ENV")
         self.DEPLOY_ENV_PROD = True if self.DEPLOY_ENV == "prod" else False
         self.DEPLOY_PORT = os.getenv("PORT")
-        self.MESSPUNKT_OBEN_LINKS = (190, 10)
-        self.MESSPUNKT_OBEN_RECHTS = (250, 10)
-        self.MESSPUNKT_UNTEN_LINKS = (190, 150)
-        self.MESSPUNKT_UNTEN_RECHTS = (250, 150)
+        self.MESSPUNKT_OBEN_LINKS = (190, 30)
+        self.MESSPUNKT_OBEN_RECHTS = (250, 30)
+        self.MESSPUNKT_UNTEN_LINKS = (190, 190)
+        self.MESSPUNKT_UNTEN_RECHTS = (250, 190)
         self.SEITENLAENGE_MESSFLAECHE = 15
         self.ROI_UPPER_LEFT = (100, 50)
-        self.ROI_BOTTOM_RIGHT = (550, 350)
+        self.ROI_BOTTOM_RIGHT = (550, 400)
         self.LOWER_RED = np.array([30, 25, 104])
         self.UPPER_RED = np.array([68, 63, 288])
         self.LOWER_YELLOW = np.array([60, 175, 183])
