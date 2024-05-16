@@ -20,13 +20,22 @@ def get_result(result_id):
     if timer is None:
         timer = datetime.now()
 
+    max_result_id = db.get_max_id()
+
+    print(f"Currently {max_result_id} results are persisted")
+
+    if result_id > max_result_id:
+        return 'Warten bis nächste Scanetappe abgeschlossen ist...', 204  # HTTP-Statuscode "No Content"
+    
     instructions = RecognitionService.get_build_instructions_from_db(result_id, db)
 
+    print(f"Currently a total of {len(instructions)} instruction steps exist")
+
     if len(instructions) < result_id:
-        return 'Warten bis nächste Scanetappe abgeschlossen ist...', 204  # HTTP-Statuscode "No Content"
+        return 'Warte bis nächste Bauinstruktion vorhanden ist', 204  # HTTP-Statuscode "No Content"
 
     # Konvertiere jedes Objekt zu einem JSON-String und fasse diese in einer Liste zusammen
-    json_strings = [instruction.to_json() for instruction in RecognitionService.get_build_instructions_from_db(result_id, db)]
+    json_strings = [instruction.to_json() for instruction in instructions[result_id - 1]]
 
     # Füge die JSON-Strings zu einem Gesamt-JSON-Array zusammen
     json_array_string = '[' + ', '.join(json_strings) + ']'
@@ -52,6 +61,8 @@ def end():
 
 @app.route('/start')
 def start():
+
+    # TODO-go: Fix multithreading when starting
     thread = Thread(target=RecognitionService.analyze_turntable_video_stream())
     thread.start()
     return 'Done', 200
@@ -59,10 +70,15 @@ def start():
 
 @app.route('/test')
 def test():
+    
+    RecognitionService.test_fill_with_static_data_variation_a()
+    
     # Erstelle eine Liste von BuildInstructionDto Objekten
+
     instructions = [
-        BuildInstructionDto(1, 2, False),
-        BuildInstructionDto(3, 4, True)
+        BuildInstructionDto(1, 2),
+        BuildInstructionDto(3, 1),
+        BuildInstructionDto(5, 3)
     ]
 
     # Konvertiere jedes Objekt zu einem JSON-String und fasse diese in einer Liste zusammen

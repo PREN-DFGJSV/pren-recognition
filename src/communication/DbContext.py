@@ -61,7 +61,9 @@ class SQLiteDB:
     def get_max_id(self) -> int:
         query = "SELECT MAX(id) FROM Recognition"
         self.cursor.execute(query)
-        return self.cursor.fetchone()
+        result = self.cursor.fetchone()
+        return 0 if result[0] is None else int(result[0])
+
 
     def recognition_exists(self, record_id: int) -> bool:
         """

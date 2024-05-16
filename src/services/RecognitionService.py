@@ -69,7 +69,7 @@ class RecognitionService:
 
                     # Check if this cube is recognized for the first time   
                     if recognized_pattern[pos] is None:
-                        print("Cube at pos", pos, "detected")
+                        print("Cube at pos", pos + 1, "detected with color", int(color))
                         recognized_pattern[pos] = BuildInstructionDto(position, int(color))
                         recognized_pattern_debug[pos] = color
                             
@@ -82,7 +82,7 @@ class RecognitionService:
                             # If it fills overhang then also append the overhang to the instruction
                             if recognized_pattern[pos + 4] is not None:
                                 built_pattern[pos + 4] = recognized_pattern[pos + 4]
-                                built_pattern_debug[pos + 4] = color
+                                built_pattern_debug[pos + 4] = recognized_pattern[pos + 4].color
                                 instructions.append(built_pattern[pos + 4])
 
                         # Check if lower layer was built to place upper
@@ -104,7 +104,7 @@ class RecognitionService:
 
     # TODO: Remove
     @staticmethod
-    def test_fill_with_static_data():
+    def test_fill_with_static_data_variation_a():
 
         db = DbContext.SQLiteDB("results.db")
 
@@ -127,6 +127,11 @@ class RecognitionService:
         cubePart4: CubePart = CubePart(EOrientierung.OST, EColor.UNDEFINED, EColor.BLUE, EColor.RED, EColor.UNDEFINED)
         db.insert_cube_part(cubePart4) # p3: B, p5: R
 
+    @staticmethod
+    def test_fill_with_static_data_variation_b():
+
+        db = DbContext.SQLiteDB("results.db")
+
         # Initial state, orientation facing west, rotating clockwise
         # III| II    G | R     G | R  
         # ---+---   ---+---   ---+---
@@ -145,10 +150,6 @@ class RecognitionService:
 
         cubePart4: CubePart = CubePart(EOrientierung.NORD, EColor.YELLOW, EColor.BLUE, EColor.RED, EColor.UNDEFINED)
         db.insert_cube_part(cubePart4) # p3: Y, p4: B, p6: R
-
-        # Wait for continue
-        if (not config.DEPLOY_ENV_PROD):
-            input("Press Enter to continue...")
 
     @staticmethod
     def test_reading_instructions():
