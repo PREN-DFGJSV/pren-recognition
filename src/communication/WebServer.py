@@ -20,17 +20,19 @@ def get_result(result_id):
     if timer is None:
         timer = datetime.now()
 
-    max_result_id = db.get_max_id()
+    if result_id > 3:
+        return 'Keine weitere Bausinstruktion, Bauvorgang abgeschlossen.', 208  # HTTP-Statuscode "Already Reported"
 
+    max_result_id = db.get_max_id()
     print(f"Currently {max_result_id} results are persisted")
 
     if result_id > max_result_id:
         return 'Warten bis nächste Scanetappe abgeschlossen ist...', 204  # HTTP-Statuscode "No Content"
     
     instructions = RecognitionService.get_build_instructions_from_db(result_id, db)
-
     print(f"Currently a total of {len(instructions)} instruction steps exist")
 
+    # TODO-go: Is this check neeeded? Will this condition ever be reached?
     if len(instructions) < result_id:
         return 'Warte bis nächste Bauinstruktion vorhanden ist', 204  # HTTP-Statuscode "No Content"
 
