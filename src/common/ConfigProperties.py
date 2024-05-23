@@ -17,6 +17,10 @@ class ConfigProperties:
     MESSPUNKT_UNTEN_RECHTS = (250, 150)
     SEITENLAENGE_MESSFLAECHE = 15
 
+    # Rotationszentrum
+    ROTATIONSPUNKT = (225, 145)
+    USE_STATIC_ROTATIONSPUNKT = True
+
     # Camera/Frame Region of Interest
     ROI_UPPER_LEFT = (100, 50)
     ROI_BOTTOM_RIGHT = (550, 350)
@@ -88,6 +92,8 @@ class ConfigProperties:
         self.MESSPUNKT_OBEN_RECHTS = (250, 30)
         self.MESSPUNKT_UNTEN_LINKS = (190, 170)
         self.MESSPUNKT_UNTEN_RECHTS = (250, 170)
+        self.ROTATIONSPUNKT = (225, 145)
+        self.USE_STATIC_ROTATIONSPUNKT = True
         self.SEITENLAENGE_MESSFLAECHE = 15
         self.ROI_UPPER_LEFT = (100, 20)
         self.ROI_BOTTOM_RIGHT = (550, 370)

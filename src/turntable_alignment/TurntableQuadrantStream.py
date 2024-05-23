@@ -13,6 +13,7 @@ from src.model.AlignedFrame import AlignedFrame
 from src.color_recognition.ColorRecognizer import ColorRecognizer
 from src.common.ConfigProperties import ConfigProperties
 from src.communication import DbContext
+from src.model.Point import Point
 
 config = ConfigProperties()
 
@@ -174,9 +175,13 @@ class TurntableQuadrantStream:
             intersection_point = Line.calculate_line_intersection(horizontal_line, vertical_line)
             x, y = intersection_point.get_tuple()
 
+            if (config.USE_STATIC_ROTATIONSPUNKT):
+                intersection_point = Point(config.ROTATIONSPUNKT[0], config.ROTATIONSPUNKT[1])
+
             cv2.line(debug_frame, horizontal_line.get_point1_coordinates(), horizontal_line.get_point2_coordinates(), (255, 0, 0), 10)
             cv2.line(debug_frame, vertical_line.get_point1_coordinates(), vertical_line.get_point2_coordinates(), (255, 0, 0), 10)
             cv2.circle(debug_frame, (int(np.round(x)), int(np.round(y))), 4, (0, 255, 0), 5)
+            cv2.circle(debug_frame, config.ROTATIONSPUNKT, 4, (0, 0, 255), 5)
 
             cv2.rectangle(debug_frame, config.MESSPUNKT_OBEN_LINKS, self.__get_point_end(config.MESSPUNKT_OBEN_LINKS), (255, 0, 0), 2)
             cv2.rectangle(debug_frame, config.MESSPUNKT_UNTEN_LINKS, self.__get_point_end(config.MESSPUNKT_UNTEN_LINKS), (255, 0, 0), 2)
