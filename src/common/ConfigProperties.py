@@ -88,15 +88,37 @@ class ConfigProperties:
         self.DEPLOY_ENV = os.getenv("DEPLOY_ENV")
         self.DEPLOY_ENV_PROD = True if self.DEPLOY_ENV == "prod" else False
         self.DEPLOY_PORT = os.getenv("PORT")
-        self.MESSPUNKT_OBEN_LINKS = (190, 30)
-        self.MESSPUNKT_OBEN_RECHTS = (250, 30)
-        self.MESSPUNKT_UNTEN_LINKS = (190, 170)
-        self.MESSPUNKT_UNTEN_RECHTS = (250, 170)
-        self.ROTATIONSPUNKT = (225, 145)
-        self.USE_STATIC_ROTATIONSPUNKT = True
+        
+        self.MESSPUNKT_OBEN_LINKS = (
+            int(os.getenv("MESSPUNKT_OBEN_LINKS_X", default = 190)), 
+            int(os.getenv("MESSPUNKT_OBEN_LINKS_Y", default = 30))
+        )
+        self.MESSPUNKT_OBEN_RECHTS = (
+            int(os.getenv("MESSPUNKT_OBEN_RECHTS_X", default = 250)), 
+            int(os.getenv("MESSPUNKT_OBEN_RECHTS_Y", default = 30))
+        )
+        self.MESSPUNKT_UNTEN_LINKS = (
+            int(os.getenv("MESSPUNKT_UNTEN_LINKS_X", default = 190)), 
+            int(os.getenv("MESSPUNKT_UNTEN_LINKS_Y", default = 170))
+        )
+        self.MESSPUNKT_UNTEN_RECHTS = (
+            int(os.getenv("MESSPUNKT_UNTEN_RECHTS_X", default = 250)), 
+            int(os.getenv("MESSPUNKT_UNTEN_RECHTS_Y", default = 170))
+        )
+        self.ROTATIONSPUNKT = (
+            int(os.getenv("ROTATIONSPUNKT_X", default = 225)), 
+            int(os.getenv("ROTATIONSPUNKT_Y", default = 145))
+        )
+        self.USE_STATIC_ROTATIONSPUNKT =  True if os.getenv("USE_STATIC_ROTATIONSPUNKT", default = "True") == "True" else False
         self.SEITENLAENGE_MESSFLAECHE = 15
-        self.ROI_UPPER_LEFT = (100, 20)
-        self.ROI_BOTTOM_RIGHT = (550, 370)
+        self.ROI_UPPER_LEFT = (
+            int(os.getenv("ROI_UPPER_LEFT_X", default = 100)),
+            int(os.getenv("ROI_UPPER_LEFT_Y", default = 20))
+        )
+        self.ROI_BOTTOM_RIGHT = (
+            int(os.getenv("ROI_BOTTOM_RIGHT_X", default = 550)),
+            int(os.getenv("ROI_BOTTOM_RIGHT_Y", default = 370))
+        )
         self.LOWER_RED = np.array([30, 25, 104])
         self.UPPER_RED = np.array([68, 63, 288])
         self.LOWER_YELLOW = np.array([60, 175, 183])
@@ -128,3 +150,6 @@ class ConfigProperties:
         self.DEBUG_SHOW_DETECTED_FRAME = True
         self.DEBUG_SHOW_COLOR_PICKER = False
         self.DEBUG_SHOW_COLOR_MASK = False
+        self.VALIDATION_URL = os.getenv("VALIDATION_URL", default = "https://oawz3wjih1.execute-api.eu-central-1.amazonaws.com")
+        self.VALIDATION_TEAM_ID = os.getenv("VALIDATION_TEAM_ID", default = "team06")
+        self.VALIDATION_TOKEN = os.getenv("VALIDATION_TOKEN", default = "aTdpCRIrI9CLS1")
