@@ -63,6 +63,7 @@ def end():
 
 @app.route('/start')
 def start():
+    ValidationService.send_start_to_validation_server()
 
     # TODO-go: Fix multithreading when starting
     thread = Thread(target=RecognitionService.analyze_turntable_video_stream())

@@ -17,6 +17,14 @@ class ValidationService:
 
         http_result = http_client.post_dto(result_dto)
         return EValidationResult.from_int(http_result)
+
+    @staticmethod
+    def send_start_to_validation_server() -> EValidationResult:
+        url = f'{ConfigProperties.VALIDATION_URL}/cubes/{ConfigProperties.VALIDATION_TEAM_ID}/start'
+        http_client = HttpClient(url, ConfigProperties.VALIDATION_TOKEN)
+
+        http_result = http_client.post()
+        return EValidationResult.from_int(http_result)
     
     @staticmethod
     def get_recognized_pattern_from_db(db_context: DbContext.SQLiteDB, duration) -> ResultDto:
