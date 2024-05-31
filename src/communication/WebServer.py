@@ -1,3 +1,5 @@
+import time
+
 from flask import Flask, Response
 from datetime import datetime
 from threading import Thread
@@ -68,6 +70,13 @@ def start():
     # TODO-go: Fix multithreading when starting
     thread = Thread(target=RecognitionService.analyze_turntable_video_stream())
     thread.start()
+    return 'Done', 200
+
+
+@app.route('/end')
+def start():
+    time.sleep(1000)
+    ValidationService.send_end_to_validation_server()
     return 'Done', 200
 
 
