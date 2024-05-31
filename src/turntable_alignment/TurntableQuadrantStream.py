@@ -1,3 +1,4 @@
+from threading import Thread
 import cv2
 import numpy as np
 
@@ -13,6 +14,7 @@ from src.model.AlignedFrame import AlignedFrame
 from src.color_recognition.ColorRecognizer import ColorRecognizer
 from src.common.ConfigProperties import ConfigProperties
 from src.communication import DbContext
+from src.services.ValidationService import ValidationService
 from src.model.Point import Point
 
 config = ConfigProperties()
@@ -106,6 +108,11 @@ class TurntableQuadrantStream:
 
                 # Detect color
                 self.__detect_color(next_frame.frame, next_frame.orientation)
+
+                if len(detected_frames) == 3:
+                    thread = Thread(target=ValidationService.send_end_to_validation_server())
+                    thread.start()
+                    
 
             current_frame_number += 1
 
