@@ -51,7 +51,7 @@ def get_result(result_id):
 
 
 @app.route('/duration')
-def end():
+def duration():
     global timer
     if timer is None:
         return 'Error', 400
@@ -75,7 +75,7 @@ def start():
 
 
 @app.route('/end')
-def start():
+def end():
     time.sleep(1000)
     result = ValidationService.send_end_to_validation_server()
     print(f'Result Validierung End: {result.name}', flush=True)
