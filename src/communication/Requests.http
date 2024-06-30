@@ -55,3 +55,8 @@ Auth: t7s9EUv3nOwk
 
 POST https://oawz3wjih1.execute-api.eu-central-1.amazonaws.com/cubes/team06/end
 Auth: t7s9EUv3nOwk
+
+############
+
+GET https://oawz3wjih1.execute-api.eu-central-1.amazonaws.com/cubes/team06
+Auth: t7s9EUv3nOwk
