@@ -63,7 +63,7 @@ class ConfigProperties:
     # Validierungsschnittstelle
     VALIDATION_URL = "https://oawz3wjih1.execute-api.eu-central-1.amazonaws.com"
     VALIDATION_TEAM_ID = "team06"
-    VALIDATION_TOKEN = "aTdpCRIrI9CLS1"
+    VALIDATION_TOKEN = "t7s9EUv3nOwk"
 
     # Database
     DATABASE_NAME = "results.db"
@@ -152,4 +152,4 @@ class ConfigProperties:
         self.DEBUG_SHOW_COLOR_MASK = False
         self.VALIDATION_URL = os.getenv("VALIDATION_URL", default = "https://oawz3wjih1.execute-api.eu-central-1.amazonaws.com")
         self.VALIDATION_TEAM_ID = os.getenv("VALIDATION_TEAM_ID", default = "team06")
-        self.VALIDATION_TOKEN = os.getenv("VALIDATION_TOKEN", default = "aTdpCRIrI9CLS1")
+        self.VALIDATION_TOKEN = os.getenv("VALIDATION_TOKEN", default = "t7s9EUv3nOwk")

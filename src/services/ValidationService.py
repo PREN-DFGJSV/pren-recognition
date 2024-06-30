@@ -10,28 +10,38 @@ class ValidationService:
     def send_to_validation_server(duration) -> EValidationResult:
         db = DbContext.SQLiteDB(ConfigProperties.DATABASE_NAME)
 
+        print('Send Cube to Validation Server')
         result_dto = ValidationService.get_recognized_pattern_from_db(db, duration)
 
         url = f'{ConfigProperties.VALIDATION_URL}/cubes/{ConfigProperties.VALIDATION_TEAM_ID}/config'
         http_client = HttpClient(url, ConfigProperties.VALIDATION_TOKEN)
 
+        print(f'Send Json for Validation to Validation Server: {result_dto}')
+
         http_result = http_client.post_dto(result_dto)
+        print(f'Received {EValidationResult.from_int(http_result)} from Validation Server')
         return EValidationResult.from_int(http_result)
 
     @staticmethod
     def send_start_to_validation_server() -> EValidationResult:
+        print('Send Start Signal to Validation Server')
+
         url = f'{ConfigProperties.VALIDATION_URL}/cubes/{ConfigProperties.VALIDATION_TEAM_ID}/start'
         http_client = HttpClient(url, ConfigProperties.VALIDATION_TOKEN)
 
         http_result = http_client.post()
+        print(f'Received {EValidationResult.from_int(http_result)} from Validation Server')
         return EValidationResult.from_int(http_result)
 
     @staticmethod
     def send_end_to_validation_server() -> EValidationResult:
+        print('Send End Signal to Validation Server')
+
         url = f'{ConfigProperties.VALIDATION_URL}/cubes/{ConfigProperties.VALIDATION_TEAM_ID}/end'
         http_client = HttpClient(url, ConfigProperties.VALIDATION_TOKEN)
 
         http_result = http_client.post()
+        print(f'Received {EValidationResult.from_int(http_result)} from Validation Server')
         return EValidationResult.from_int(http_result)
     
     @staticmethod
