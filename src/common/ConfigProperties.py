@@ -58,9 +58,11 @@ class ConfigProperties:
     RTSP_URL = RTSP_IP + RTSP_PATH
     RTSP_USERNAME = "pren"
     RTSP_PASSWORD = "463997"
-    RTSP_PROFILE = "pren_profile_small"     # "pren_profile_small" or "pren_profile_med"
+    RTSP_PROFILE = "pren_profile_med"     # "pren_profile_small" or "pren_profile_med"
 
     # Validierungsschnittstelle
+    # DEV: https://ubqs3u6r81.execute-api.eu-central-1.amazonaws.com
+    # PROD: https://oawz3wjih1.execute-api.eu-central-1.amazonaws.com
     VALIDATION_URL = "https://oawz3wjih1.execute-api.eu-central-1.amazonaws.com"
     VALIDATION_TEAM_ID = "team06"
     VALIDATION_TOKEN = "t7s9EUv3nOwk"
@@ -129,11 +131,11 @@ class ConfigProperties:
         self.UPPER_WHITE = np.array([172, 111, 255])
         self.LOWER_BLACK = np.array([0, 0, 0])
         self.UPPER_BLACK = np.array([180, 255, 40])
-        self.LINE_THRESHOLD = 50 
-        self.LINE_MIN_PX_LENGTH = 100 
-        self.LINE_MAX_GAP = 40 
-        self.ANGLE_DEVIATION_THRESHOLD_DEG = 4 
-        self.DETECT_FRAMES_COUNT: int = 4
+        self.LINE_THRESHOLD = 40 
+        self.LINE_MIN_PX_LENGTH = 120 
+        self.LINE_MAX_GAP = 20 
+        self.ANGLE_DEVIATION_THRESHOLD_DEG = 2 
+        self.DETECT_FRAMES_COUNT: int = 2
         self.DETECT_FRAMES_STEP: int = 90
         self.MAX_ANGLE_ROTATION_FIRST_FRAME = 275
         self.TURNTABLE_RPM = 2.3

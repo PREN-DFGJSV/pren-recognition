@@ -24,7 +24,7 @@ class ValidationService:
 
     @staticmethod
     def send_start_to_validation_server() -> EValidationResult:
-        print('Send Start Signal to Validation Server')
+        print(f'Send Start Signal to Validation Server ({ConfigProperties.VALIDATION_URL})')
 
         url = f'{ConfigProperties.VALIDATION_URL}/cubes/{ConfigProperties.VALIDATION_TEAM_ID}/start'
         http_client = HttpClient(url, ConfigProperties.VALIDATION_TOKEN)

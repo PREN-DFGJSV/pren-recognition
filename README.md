@@ -52,7 +52,7 @@ pren-420709
 
 ```sh
 docker build -t pren/recognition:latest .
-docker run -p 5000:5000 -e DEPLOY_ENV='prod' -e PYTHONUNBUFFERED='1' -e PORT='5000' pren/recognition:latest
+docker run -p 5000:5000 -e DEPLOY_ENV='prod' -e PYTHONUNBUFFERED='1' -e PORT='5000' -e VALIDATION_URL='https://ubqs3u6r81.execute-api.eu-central-1.amazonaws.com' pren/recognition:latest
 ```
 
 ## Docker cloud
