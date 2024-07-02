@@ -65,8 +65,12 @@ docker run -p 5000:5000 -e DEPLOY_ENV='prod' -e PYTHONUNBUFFERED='1' -e PORT='50
 - - http://localhost:5000/3/result
 
 ## Docker cloud
-- URL: https://pren-recognition-r35oqtcxna-oa.a.run.app/reset
-- Logs: https://cloudlogging.app.goo.gl/9e8VreZX2VDB5dUx8
+- Cloud Run: https://console.cloud.google.com/run?hl=en&project=pren-420709
+- - Config: pren-recognition > Edit & deploy new revision > Container image URL > gcr.io/pren-420707/pren-recognition > "Select most recent" > Deploy
+- URL (Reset): https://pren-recognition-r35oqtcxna-oa.a.run.app/reset
+- - Start: https://pren-recognition-r35oqtcxna-oa.a.run.app/start
+- - Result 1: https://pren-recognition-r35oqtcxna-oa.a.run.app/1/result
+- Logs: https://cloudlogging.app.goo.gl/9e8VreZX2VDB5dUx8 | https://console.cloud.google.com/run/detail/europe-west6/pren-recognition/logs?hl=en&project=pren-420709
 
 
 ## Setup
