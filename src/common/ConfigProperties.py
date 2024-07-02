@@ -91,36 +91,15 @@ class ConfigProperties:
         self.DEPLOY_ENV_PROD = True if self.DEPLOY_ENV == "prod" else False
         self.DEPLOY_PORT = os.getenv("PORT")
         
-        self.MESSPUNKT_OBEN_LINKS = (
-            int(os.getenv("MESSPUNKT_OBEN_LINKS_X", default = 190)), 
-            int(os.getenv("MESSPUNKT_OBEN_LINKS_Y", default = 30))
-        )
-        self.MESSPUNKT_OBEN_RECHTS = (
-            int(os.getenv("MESSPUNKT_OBEN_RECHTS_X", default = 250)), 
-            int(os.getenv("MESSPUNKT_OBEN_RECHTS_Y", default = 30))
-        )
-        self.MESSPUNKT_UNTEN_LINKS = (
-            int(os.getenv("MESSPUNKT_UNTEN_LINKS_X", default = 190)), 
-            int(os.getenv("MESSPUNKT_UNTEN_LINKS_Y", default = 170))
-        )
-        self.MESSPUNKT_UNTEN_RECHTS = (
-            int(os.getenv("MESSPUNKT_UNTEN_RECHTS_X", default = 250)), 
-            int(os.getenv("MESSPUNKT_UNTEN_RECHTS_Y", default = 170))
-        )
-        self.ROTATIONSPUNKT = (
-            int(os.getenv("ROTATIONSPUNKT_X", default = 225)), 
-            int(os.getenv("ROTATIONSPUNKT_Y", default = 145))
-        )
-        self.USE_STATIC_ROTATIONSPUNKT =  True if os.getenv("USE_STATIC_ROTATIONSPUNKT", default = "True") == "True" else False
+        self.MESSPUNKT_OBEN_LINKS = self.loadEnvConfigPoint("MESSPUNKT_OBEN_LINKS", 190, 30)
+        self.MESSPUNKT_OBEN_RECHTS = self.loadEnvConfigPoint("MESSPUNKT_OBEN_RECHTS", 250, 30)
+        self.MESSPUNKT_UNTEN_LINKS = self.loadEnvConfigPoint("MESSPUNKT_UNTEN_LINKS", 190, 170)
+        self.MESSPUNKT_UNTEN_RECHTS = self.loadEnvConfigPoint("MESSPUNKT_UNTEN_RECHTS", 250, 170)
+        self.ROTATIONSPUNKT = self.loadEnvConfigPoint("ROTATIONSPUNKT", 225, 145)
+        self.USE_STATIC_ROTATIONSPUNKT = self.loadEnvConfigBool("USE_STATIC_ROTATIONSPUNKT", True)
         self.SEITENLAENGE_MESSFLAECHE = 15
-        self.ROI_UPPER_LEFT = (
-            int(os.getenv("ROI_UPPER_LEFT_X", default = 100)),
-            int(os.getenv("ROI_UPPER_LEFT_Y", default = 20))
-        )
-        self.ROI_BOTTOM_RIGHT = (
-            int(os.getenv("ROI_BOTTOM_RIGHT_X", default = 550)),
-            int(os.getenv("ROI_BOTTOM_RIGHT_Y", default = 370))
-        )
+        self.ROI_UPPER_LEFT = self.loadEnvConfigPoint("ROI_UPPER_LEFT", 80, 30)
+        self.ROI_BOTTOM_RIGHT = self.loadEnvConfigPoint("ROI_BOTTOM_RIGHT", 550, 370)
         self.LOWER_RED = np.array([30, 25, 104])
         self.UPPER_RED = np.array([68, 63, 288])
         self.LOWER_YELLOW = np.array([60, 175, 183])
@@ -131,11 +110,11 @@ class ConfigProperties:
         self.UPPER_WHITE = np.array([172, 111, 255])
         self.LOWER_BLACK = np.array([0, 0, 0])
         self.UPPER_BLACK = np.array([180, 255, 40])
-        self.LINE_THRESHOLD = 40 
-        self.LINE_MIN_PX_LENGTH = 120 
-        self.LINE_MAX_GAP = 20 
+        self.LINE_THRESHOLD = 50 
+        self.LINE_MIN_PX_LENGTH = 100 
+        self.LINE_MAX_GAP = 30 
         self.ANGLE_DEVIATION_THRESHOLD_DEG = 2 
-        self.DETECT_FRAMES_COUNT: int = 2
+        self.DETECT_FRAMES_COUNT: int = 3
         self.DETECT_FRAMES_STEP: int = 90
         self.MAX_ANGLE_ROTATION_FIRST_FRAME = 275
         self.TURNTABLE_RPM = 2.3
@@ -152,6 +131,35 @@ class ConfigProperties:
         self.DEBUG_SHOW_DETECTED_FRAME = True
         self.DEBUG_SHOW_COLOR_PICKER = False
         self.DEBUG_SHOW_COLOR_MASK = False
-        self.VALIDATION_URL = os.getenv("VALIDATION_URL", default = "https://oawz3wjih1.execute-api.eu-central-1.amazonaws.com")
-        self.VALIDATION_TEAM_ID = os.getenv("VALIDATION_TEAM_ID", default = "team06")
-        self.VALIDATION_TOKEN = os.getenv("VALIDATION_TOKEN", default = "t7s9EUv3nOwk")
+        self.VALIDATION_URL = self.loadEnvConfig("VALIDATION_URL", "https://oawz3wjih1.execute-api.eu-central-1.amazonaws.com")
+        self.VALIDATION_TEAM_ID = self.loadEnvConfig("VALIDATION_TEAM_ID", "team06")
+        self.VALIDATION_TOKEN = self.loadEnvConfig("VALIDATION_TOKEN", "t7s9EUv3nOwk")
+
+    def loadEnvConfig(self, env_name: str, default_val: str) -> str:
+        if self.DEPLOY_ENV_PROD and os.getenv(env_name) is not None:
+            val = os.getenv(env_name, default = default_val)
+            print(f"Loaded env config for '{env_name}' with value '{val}' (default='{default_val}')", flush = True)
+            return val
+        return default_val
+    
+    def loadEnvConfigPoint(self, env_name: str, default_x: int, default_y: int) -> tuple[int, int]:
+        if self.DEPLOY_ENV_PROD:
+            val_x = self.loadEnvConfigInt(f'{env_name}_X', default_x)
+            val_y = self.loadEnvConfigInt(f'{env_name}_Y', default_y)
+            return (val_x, val_y)
+        
+        return (default_x, default_y)
+    
+    def loadEnvConfigInt(self, env_name: str, default_val: int) -> int:
+        if self.DEPLOY_ENV_PROD and os.getenv(env_name) is not None:
+            val = os.getenv(env_name, default = default_val)
+            print(f"Loaded env config for '{env_name}' with value '{val}' (default='{default_val}')", flush = True)
+            return val
+        return default_val
+    
+    def loadEnvConfigBool(self, env_name: str, default_val: bool) -> bool:
+        if self.DEPLOY_ENV_PROD and os.getenv(env_name) is not None:
+            val = True if os.getenv(env_name, default = str(default_val)) == "True" else False
+            print(f"Loaded env config for '{env_name}' with value {val} (default={default_val})", flush = True)
+            return val
+        return default_val

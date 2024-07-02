@@ -53,7 +53,16 @@ pren-420709
 ```sh
 docker build -t pren/recognition:latest .
 docker run -p 5000:5000 -e DEPLOY_ENV='prod' -e PYTHONUNBUFFERED='1' -e PORT='5000' -e VALIDATION_URL='https://ubqs3u6r81.execute-api.eu-central-1.amazonaws.com' pren/recognition:latest
+docker run -p 5000:5000 -e DEPLOY_ENV='prod' -e PYTHONUNBUFFERED='1' -e PORT='5000' -e VALIDATION_URL='https://ubqs3u6r81.execute-api.eu-central-1.amazonaws.com' -e MESSPUNKT_OBEN_RECHTS_X='255' -e MESSPUNKT_UNTEN_LINKS_Y='195' -e MESSPUNKT_UNTEN_RECHTS_X='255' -e MESSPUNKT_UNTEN_RECHTS_Y='175' -e USE_STATIC_ROTATIONSPUNKT="False" pren/recognition:latest
 ```
+
+### Urls
+- http://localhost:5000/reset
+- http://localhost:5000/start
+- results:
+- - http://localhost:5000/1/result
+- - http://localhost:5000/2/result
+- - http://localhost:5000/3/result
 
 ## Docker cloud
 - URL: https://pren-recognition-r35oqtcxna-oa.a.run.app/reset
